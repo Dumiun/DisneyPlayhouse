@@ -1,14 +1,14 @@
 ﻿@inject IStringLocalizer<Resource> localizer
-    
-    <button class="btn btn-dark btn-md m-3">
+
+<a class="btn btn-primary btn-md m-3" href="Account/Manage">
     <strong>@currentUser</strong>
-        <AuthorizeView roles="Member">
-            <span class="badge bg-secondary ms-2">@localizer["Member"]</span>
-        </AuthorizeView>
-        <AuthorizeView roles="Admin">
-            <span class="badge bg-success ms-2">@localizer["Admin"]</span>
-        </AuthorizeView>
-    </button>
+    <AuthorizeView roles="Member">
+        <span class="badge bg-success ms-2">@localizer["Member"]</span>
+    </AuthorizeView>
+    <AuthorizeView roles="Admin">
+        <span class="badge bg-success ms-2">@localizer["Admin"]</span>
+    </AuthorizeView>
+</a>
 
 
 @code {

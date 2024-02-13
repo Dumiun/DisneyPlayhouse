@@ -22,15 +22,24 @@
                 </div>
 
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="auth">
-                        <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
+                    <NavLink class="nav-link" href="Account/Manage">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
                     </NavLink>
                 </div>
 
-
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    <NavLink class="nav-link" href="BettingForm4D">
+                        <i class="bi bi-file-text-fill mb-4"></i> Place Bets
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="BetHistory4D">
+                        <i class="bi bi-clock-history mb-4"></i> Bet History
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Report4D">
+                        <i class="bi bi-file-ruled-fill mb-4"></i> Report
                     </NavLink>
                 </div>
             </Authorized>

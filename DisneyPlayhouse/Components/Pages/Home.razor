@@ -1,15 +1,14 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Authorization
 @inject IStringLocalizer<Resource> localizer
 
 <PageTitle>Home</PageTitle>
 
 @attribute [Authorize(Roles ="Member")]
 
-<PageTitle>Auth</PageTitle>
-
 <AuthorizeView>
 <h1>@localizer["WelcomeMessage"]</h1>
+<p>@DateTime.Now.ToLongDateString()</p>
 
 Welcome to your new app.
+
 </AuthorizeView>

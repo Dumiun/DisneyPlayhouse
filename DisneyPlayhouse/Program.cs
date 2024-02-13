@@ -1,6 +1,8 @@
 using DisneyPlayhouse.Components;
 using DisneyPlayhouse.Components.Account;
 using DisneyPlayhouse.Data;
+using DisneyPlayhouseLibrary.Data;
+using DisneyPlayhouseLibrary.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +46,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IDataAccessService, DataAccessService>();
+builder.Services.AddScoped<IMemberData, MemberData>();
 
 var app = builder.Build();
 

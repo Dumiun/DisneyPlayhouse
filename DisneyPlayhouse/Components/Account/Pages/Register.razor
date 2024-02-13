@@ -3,9 +3,12 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
+@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using DisneyPlayhouse.Data
+@using DisneyPlayhouseLibrary.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -14,6 +17,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IMemberData memberData
 
 <PageTitle>Register</PageTitle>
 
@@ -64,6 +68,7 @@
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
+    private ILib_MemberDetailsModel newMemberDetails = new MemberDetailsModel();
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -91,6 +96,15 @@
         await UserManager.AddToRoleAsync(user, Input.Role);
 
         Logger.LogInformation("User created a new account with password.");
+
+        newMemberDetails.LoginId = Input.LoginId;
+        newMemberDetails.ParentLoginId = Input.LoginId;
+        newMemberDetails.AutoCredit = true;
+        newMemberDetails.CreatedDate = DateTime.Now;
+        newMemberDetails.LatestLoggedInDate = DateTime.Now;
+
+
+    await memberData.CreateNewMemberDetails(newMemberDetails);
 
         //var userId = await UserManager.GetUserIdAsync(user);
         //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
