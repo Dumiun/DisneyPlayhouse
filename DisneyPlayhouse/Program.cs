@@ -11,6 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddLocalization();
+builder.Services.AddControllers();
+
+string[] supportedCultures = ["en-US", "zh-SG"];
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -54,6 +63,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseRequestLocalization(localizationOptions);
+app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
