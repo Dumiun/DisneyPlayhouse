@@ -39,6 +39,19 @@
                 <label for="email">Login ID</label>
                 <ValidationMessage For="() => Input.LoginId" class="text-danger" />
             </div>
+            @if(parents != null && parents.Any())
+                {
+                    <div class="form-floating mb-3">
+                        <InputSelect @bind-Value="Input.ParentLoginId" class="form-control">
+                            <option value="">Please select ID</option>
+                            @foreach (var parent in parents)
+                            {
+                                <option value="@parent.LoginId" class="text-dark">@parent.LoginId</option>
+                            }
+                        </InputSelect>
+                    </div>
+                }
+
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                 <label for="password">Password</label>
@@ -64,6 +77,10 @@
                 <label for="select-role">Select Role</label>
                 <ValidationMessage For="() => Input.Role" class="text-danger" />
             </div>
+                <div class="form-check mb-3">
+                    <label class="form-check-label" for="chkAutoCredit">Auto Credit</label>
+                    <InputCheckbox id="chkAutoCredit" class="form-check-input" type="checkbox" @bind-Value="Input.isAutoCredit" />
+                </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
@@ -72,6 +89,7 @@
 @code {
     private IEnumerable<IdentityError>? identityErrors;
     private ILib_MemberDetailsModel newMemberDetails = new MemberDetailsModel();
+    private List<ILib_ListOfParentIdModel> parents = new List<ILib_ListOfParentIdModel>();
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -80,6 +98,11 @@
     private string? ReturnUrl { get; set; }
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        parents = await memberData.GetListOfParentId();
+    }
 
     public async Task RegisterUser(EditContext editContext)
     {
@@ -101,13 +124,14 @@
         Logger.LogInformation("User created a new account with password.");
 
         newMemberDetails.LoginId = Input.LoginId;
-        newMemberDetails.ParentLoginId = Input.LoginId;
-        newMemberDetails.AutoCredit = true;
+        newMemberDetails.ParentLoginId = Input.ParentLoginId;
+        newMemberDetails.AutoCredit = Input.isAutoCredit;
         newMemberDetails.CreatedDate = DateTime.Now;
         newMemberDetails.LatestLoggedInDate = DateTime.Now;
 
 
-    await memberData.CreateNewMemberDetails(newMemberDetails);
+        await memberData.CreateNewMemberDetails(newMemberDetails);
+        await memberData.CreateNewMemberRelationship(newMemberDetails);
 
         //var userId = await UserManager.GetUserIdAsync(user);
         //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
@@ -125,8 +149,9 @@
         //        new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         //}
 
-        await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
+        //await SignInManager.SignInAsync(user, isPersistent: false);
+        string currentUrl = NavigationManager.Uri;
+        NavigationManager.NavigateTo(currentUrl);
     }
 
     private ApplicationUser CreateUser()
@@ -178,5 +203,8 @@
         [DataType(DataType.Text)]
         [Display(Name = "Currency Type")]
         public string CurrencyType { get; set; } = "";
+
+        public bool isAutoCredit { get; set; } = false;
+        public string ParentLoginId { get; set; } = "";
     }
 }

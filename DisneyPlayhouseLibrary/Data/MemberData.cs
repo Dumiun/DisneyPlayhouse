@@ -30,5 +30,22 @@ namespace DisneyPlayhouseLibrary.Data
 
             await _dataAccess.SaveData("dbo.spMember_Insert", newMember, "DefaultConnection");
         }
+
+        public async Task CreateNewMemberRelationship(ILib_MemberDetailsModel info)
+        {
+            var newRS = new
+            {
+                ChildId = info.LoginId,
+                ParentId = info.ParentLoginId,
+            };
+
+            await _dataAccess.SaveData("dbo.spMemberRelationshipTree_Insert", newRS, "DefaultConnection");
+        }
+
+        public async Task<List<ILib_ListOfParentIdModel>> GetListOfParentId()
+        {
+            var parentList = await _dataAccess.LoadData<Lib_ListOfParentIdModel, dynamic>("dbo.spParentId_Search", new { }, "DefaultConnection");
+            return parentList.ToList<ILib_ListOfParentIdModel>();
+        }
     }
 }
