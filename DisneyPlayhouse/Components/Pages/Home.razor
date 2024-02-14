@@ -3,7 +3,7 @@
 
 <PageTitle>Home</PageTitle>
 
-@attribute [Authorize(Roles ="Member")]
+@attribute [Authorize(Roles = "Member,Admin")]
 
 <AuthorizeView>
 <h1>@localizer["WelcomeMessage"]</h1>

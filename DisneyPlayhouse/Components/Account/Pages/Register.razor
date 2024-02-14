@@ -21,6 +21,9 @@
 
 <PageTitle>Register</PageTitle>
 
+@attribute [Authorize(Roles = "Admin")]
+
+<AuthorizeView Context="authContext">
 <h1>Register</h1>
 
 <div class="row">
@@ -65,7 +68,7 @@
         </EditForm>
     </div>
 </div>
-
+</AuthorizeView>
 @code {
     private IEnumerable<IdentityError>? identityErrors;
     private ILib_MemberDetailsModel newMemberDetails = new MemberDetailsModel();
