@@ -1,4 +1,5 @@
-﻿using DisneyPlayhouseLibrary.Models;
+﻿using Dapper;
+using DisneyPlayhouseLibrary.Models;
 using DisneyPlayhouseLibrary.Services;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,12 @@ namespace DisneyPlayhouseLibrary.Data
         {
             var parentList = await _dataAccess.LoadData<Lib_ListOfParentIdModel, dynamic>("dbo.spParentId_Search", new { }, "DefaultConnection");
             return parentList.ToList<ILib_ListOfParentIdModel>();
+        }
+
+        public async Task<List<ILib_ListOfChildIdModel>> GetListOfChildId(string currentUserId)
+        {
+            var childList = await _dataAccess.LoadData<Lib_ListOfChildIdModel, dynamic>("dbo.spChildId_Search", new { ParentId = currentUserId }, "DefaultConnection");
+            return childList.ToList<ILib_ListOfChildIdModel>();
         }
     }
 }

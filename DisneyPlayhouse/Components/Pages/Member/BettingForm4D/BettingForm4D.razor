@@ -1,11 +1,66 @@
 ﻿@page "/BettingForm4D"
+@inject NavigationManager NavigationManager
 <PageTitle>Betting Form 4D</PageTitle>
 
 @attribute [Authorize(Roles = "Member")]
 
 <AuthorizeView>
-    <h3>Betting Form 4D</h3>
+    <BettingForm4DFormDetails OnBelongsToSet="SetInvoiceBelongsTo" PageNameSet="SetInvoicePageName" ResetFormSet="ResetForm"></BettingForm4DFormDetails>
+    <div class="container mt-4 table-responsive">
+    <table class="table table-bordered table-striped text-center">
+<BetFormTableHeader></BetFormTableHeader>
+        <tbody>
+            @for(int i = 0; i < Numbers.Count; i += 3)
+                {
+                                    <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
+                                         Number="@Numbers[i]" Number2="@Numbers[i+1]" Number3="@Numbers[i+2]"
+                                         SmallValue="@SmallInputValues[i]" SmallValue2="@SmallInputValues[i+1]" SmallValue3="@SmallInputValues[i+2]"
+                                         BigValue="@BigInputValues[i]" BigValue2="@BigInputValues[i+1]" BigValue3="@BigInputValues[i+2]"
+                                         Day="@Days[i]" Day2="@Days[i+1]" Day3="@Days[i+2]"
+                    Roll="@Rolls[i]" Roll2="@Rolls[i+1]" Roll3="@Rolls[i+2]"></BettingForm4DFields>
+                }
+                @if(AddRowClicked != true)
+                {
+                                   <tr>
+                    <td colspan="18">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow">Add Row</button>
+                    </td>
+                    </tr>
+                }
+                else
+                {
+
+                }
+        </tbody>
+    </table>
+</div>
 </AuthorizeView>
 @code {
+    [Parameter] public string InvoiceBelongsTo { get; set; } = "";
+    [Parameter] public string InvoicePageName { get; set; } = "";
+    public bool AddRowClicked { get; set; } = false;
+
+    List<int> SmallInputValues = Enumerable.Repeat(0, 30).ToList(); // All the inputs for SMALL field by user
+    List<double> BigInputValues = Enumerable.Repeat(0.0, 30).ToList(); // All the inputs for BIG field by user
+    List<string> Numbers = Enumerable.Repeat("", 30).ToList(); // All the inputs for NUMBER field by user
+    List<int> Days = Enumerable.Repeat(0, 30).ToList(); // All the inputs for DAYS field by user
+    List<string> Rolls = Enumerable.Repeat("", 30).ToList(); // All the inputs for ROLLS field by user
+
+    private void SetInvoiceBelongsTo(string value)
+    {
+        InvoiceBelongsTo = value;
+    }
+    private void SetInvoicePageName(string value)
+    {
+        InvoicePageName = value;
+    }
+    private void ResetForm()
+    {
+        NavigationManager.NavigateTo("/BettingForm4D", true);
+    }
+    private void AddRow()
+    {
+        AddRowClicked = true;
+    }
 
 }
