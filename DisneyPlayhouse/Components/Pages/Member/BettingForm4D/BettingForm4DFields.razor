@@ -1,5 +1,5 @@
 ﻿<tr>
-    <td><label class="h5 mt-1">@(Id + 1)</label></td>
+    <td><label class="h5 mt-1 fw-bold">@(Id + 1)</label></td>
     <td>
         <select @onchange="UpdateDay" value="@Day" class="form-control" style="width:40px;">
             @foreach (var dayOption in GetAvailableDays())
@@ -27,7 +27,7 @@
         </select>
     </td>
 
-    <th scope="col"><label class="h5 mt-1">@(Id2 + 1)</label></th>
+    <td><label class="h5 mt-1 fw-bold">@(Id2 + 1)</label></td>
     <td>
         <select @onchange="UpdateDay2" value="@Day2" class="form-control" style="width:40px;">
             @foreach (var dayOption in GetAvailableDays())
@@ -54,7 +54,7 @@
             <option value="I">I</option>
         </select>
     </td>
-    <th scope="col"><label class="h5 mt-1">@(Id3 + 1)</label></th>
+    <td><label class="h5 mt-1 fw-bold">@(Id3 + 1)</label></td>
     <td>
         <select @onchange="UpdateDay3" value="@Day3" class="form-control" style="width:40px;">
             @foreach (var dayOption in GetAvailableDays())
