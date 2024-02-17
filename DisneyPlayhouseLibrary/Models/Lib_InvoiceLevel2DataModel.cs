@@ -10,6 +10,7 @@ namespace DisneyPlayhouseLibrary.Models
     {
         public string InvoiceId { get; set; }
         public string Number { get; set; }
+        public int NoOfVariations { get; set; }
         public double Big { get; set; }
         public int Small { get; set; }
         public int Day { get; set; }
@@ -18,5 +19,8 @@ namespace DisneyPlayhouseLibrary.Models
         public int ActualSmall { get; set; }
         public double TotalCostForEntry { get; set; }
         public List<DateTime> DrawDates { get; set; }
+        public DateTime DrawDate1 { get; set; }
+        public DateTime DrawDate2 { get; set; }
+        public DateTime DrawDate3 { get; set; }
     }
 }

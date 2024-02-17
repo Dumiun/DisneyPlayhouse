@@ -8,5 +8,7 @@ namespace DisneyPlayhouseLibrary.Data
         Task CreateInvoiceLevel2Entry(ILib_InvoiceLevel2DataModel data);
         Task CreateInvoiceLevel3Entry(ILib_InvoiceLevel3DataModel data);
         Task CreateInvoiceLevel4Entry(ILib_InvoiceLevel4DataModel data);
+        Task<List<ILib_InvoiceLevel1DataModel>> GetBetHistoryForUserWithinDateRange(string forId, DateTime from, DateTime to);
+        Task<List<ILib_InvoiceLevel2DataModel>> GetDetailsOfSelectedInvoice(string invoiceId);
     }
 }

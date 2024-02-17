@@ -1,6 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spInvoiceLevel2Entry_Insert]
     @InvoiceId NVARCHAR(50), 
     @Number NVARCHAR(4), 
+    @NoOfVariations INT,
     @Big DECIMAL(10, 2), 
     @Small INT, 
     @Day INT, 
@@ -15,6 +16,6 @@
     BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO [dbo].[4DInvoiceLevel2] (InvoiceId, Number, Big, Small, Day, Roll, ActualBig, ActualSmall, TotalCostForEntry, DrawDate1, DrawDate2, DrawDate3)
-    VALUES (@InvoiceId, @Number, @Big, @Small, @Day, @Roll, @ActualBig, @ActualSmall, @TotalCostForEntry, @DrawDate1, @DrawDate2, @DrawDate3)
+    INSERT INTO [dbo].[4DInvoiceLevel2] (InvoiceId, Number, NoOfVariations, Big, Small, Day, Roll, ActualBig, ActualSmall, TotalCostForEntry, DrawDate1, DrawDate2, DrawDate3)
+    VALUES (@InvoiceId, @Number, @NoOfVariations, @Big, @Small, @Day, @Roll, @ActualBig, @ActualSmall, @TotalCostForEntry, @DrawDate1, @DrawDate2, @DrawDate3)
 	END

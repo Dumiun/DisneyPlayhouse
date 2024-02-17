@@ -42,6 +42,7 @@ namespace DisneyPlayhouseLibrary.Data
             {
                 data.InvoiceId,
                 data.Number,
+                data.NoOfVariations,
                 data.Big,
                 data.Small,
                 data.Day,
@@ -84,6 +85,18 @@ namespace DisneyPlayhouseLibrary.Data
                 data.StrikeAmount
             };
             await _dataAccess.SaveData("dbo.spInvoiceLevel4Entry_Insert", entry, "DefaultConnection");
+        }
+
+        public async Task<List<ILib_InvoiceLevel1DataModel>> GetBetHistoryForUserWithinDateRange(string forId, DateTime from, DateTime to)
+        {
+            var list = await _dataAccess.LoadData<Lib_InvoiceLevel1DataModel, dynamic>("dbo.spBetHistoryForUserWithinDateRange", new { PurchasedForId = forId, FromDate = from, ToDate = to }, "DefaultConnection");
+            return list.ToList<ILib_InvoiceLevel1DataModel>();
+        }
+
+        public async Task<List<ILib_InvoiceLevel2DataModel>> GetDetailsOfSelectedInvoice(string invoiceId)
+        {
+            var list = await _dataAccess.LoadData<Lib_InvoiceLevel2DataModel, dynamic>("dbo.spDetailsOfSelectedInvoice", new { invoiceId = invoiceId }, "DefaultConnection");
+            return list.ToList<ILib_InvoiceLevel2DataModel>();
         }
     }
 }
