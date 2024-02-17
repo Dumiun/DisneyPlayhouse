@@ -13,6 +13,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         [Parameter] public double TotalBig { get; set; }
         [Parameter] public double TotalSmall { get; set; }
         [Parameter] public double TotalAmount { get; set; }
+        [Parameter] public bool SubmitDisabled { get; set; }
 
         private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
         private BetFormDetailsModel betFormDetailsModel = new BetFormDetailsModel();

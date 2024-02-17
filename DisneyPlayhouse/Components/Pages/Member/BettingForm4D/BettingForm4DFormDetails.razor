@@ -31,7 +31,7 @@
                                ValueChanged="@((string value) => OnValueChangedPageName(value))" class="form-control"></InputText>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-success btn-lg btn-block mt-2 w-100" @onclick="@OnHandleSubmitForm">Submit Form</button>
+                    <button type="button" class="btn btn-success btn-lg btn-block mt-2 w-100" @onclick="@OnHandleSubmitForm" disabled="@SubmitDisabled">Submit Form</button>
                 </div>
                 </div>
             <div class="row mt-4">

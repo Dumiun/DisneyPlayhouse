@@ -8,7 +8,7 @@
 <AuthorizeView>
     @if(DoubleCheckInvoice != true)
     {
-        <BettingForm4DFormDetails OnBelongsToSet="SetInvoiceBelongsTo" OnPurchasedByWhoSet="SetInvoicePurchasedBy" PageNameSet="SetInvoicePageName" ResetFormSet="ResetForm" submitFormSet="SubmitInvoice" TotalBig="@TotalBigForDisplay" TotalSmall="@TotalSmallForDisplay" TotalAmount="@TotalCostForDisplay"></BettingForm4DFormDetails>
+        <BettingForm4DFormDetails OnBelongsToSet="SetInvoiceBelongsTo" OnPurchasedByWhoSet="SetInvoicePurchasedBy" PageNameSet="SetInvoicePageName" ResetFormSet="ResetForm" submitFormSet="SubmitInvoice" TotalBig="@TotalBigForDisplay" TotalSmall="@TotalSmallForDisplay" TotalAmount="@TotalCostForDisplay" SubmitDisabled="@SubmitIsDisabled"></BettingForm4DFormDetails>
         <div class="container mt-4 table-responsive" style="font-size:small;">
             <table class="table table-bordered table-striped text-center" >
                 <BetFormTableHeader></BetFormTableHeader>
@@ -54,7 +54,17 @@
     int TotalSmallForDisplay;
     double TotalCostForDisplay;
     private bool DoubleCheckInvoice = false;
+    [Parameter]public bool SubmitIsDisabled { get; set; }
     public List<BettingForm4DEachEntryModel> Entries = Enumerable.Range(0, 30).Select(_ => new BettingForm4DEachEntryModel()).ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(InvoicePageName.Length < 1 || InvoiceBelongsTo.Length < 1 || Entries[0].Number.Length < 4)
+        {
+            SubmitIsDisabled = true;
+        }
+    }
+
 
     private void UpdateAll((dynamic Value, int Index, string Action) updatedValue)
     {
@@ -91,9 +101,10 @@
                 Entries[updatedValue.Index].NumberVariations = variationsString;
             }
         }
+
         if (Entries[updatedValue.Index].Number != null)
         {
-            if (Entries[updatedValue.Index].Number.Length == 4)
+            if (Entries[updatedValue.Index].Number.Length == 4 && Entries[updatedValue.Index].Day != 0)
             {
                 Entries[updatedValue.Index].ActualBig = (Entries[updatedValue.Index].Big * Entries[updatedValue.Index].NumberVariations.Count) * Entries[updatedValue.Index].DrawDates.Count;
                 Entries[updatedValue.Index].ActualSmall = (Entries[updatedValue.Index].Small * Entries[updatedValue.Index].NumberVariations.Count) * Entries[updatedValue.Index].DrawDates.Count;
@@ -105,6 +116,16 @@
         TotalBigForDisplay = Entries.Sum(x => x.ActualBig);
         TotalSmallForDisplay = Entries.Sum(x => x.ActualSmall);
         TotalCostForDisplay = Entries.Sum(x => x.TotalCostForEntry);
+
+        SubmitAllowed();
+    }
+
+    private async Task SubmitAllowed()
+    {
+        if (InvoicePageName.Length > 1 && InvoiceBelongsTo.Length > 1 && Entries[0].Number.Length == 4)
+        {
+            SubmitIsDisabled = false;
+        }
     }
 
     //Calculation for Number Variations
@@ -259,6 +280,7 @@
     private void SetInvoiceBelongsTo(string value)
     {
         InvoiceBelongsTo = value;
+        SubmitAllowed();
     }
     private void SetInvoicePurchasedBy(string value)
     {
@@ -267,6 +289,7 @@
     private void SetInvoicePageName(string value)
     {
         InvoicePageName = value;
+        SubmitAllowed();
     }
     private void ResetForm()
     {

@@ -14,5 +14,6 @@
         public double BigCostForEntry { get; set; }
         public double SmallCostForEntry { get; set; }
         public double TotalCostForEntry { get; set; }
+        public bool isEntryValid { get; set; } = true;
     }
 }
