@@ -70,6 +70,14 @@
     <Build Include="dbo\Stored Procedures\spMemberRelationshipTree_Insert.sql" />
     <Build Include="dbo\Stored Procedures\spParentId_Search.sql" />
     <Build Include="dbo\Stored Procedures\spChildId_Search.sql" />
+    <Build Include="dbo\Tables\4DInvoiceLevel1.sql" />
+    <Build Include="dbo\Tables\4DInvoiceLevel2.sql" />
+    <Build Include="dbo\Stored Procedures\spInvoiceLevel1Entry_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\spInvoiceLevel2Entry_Insert.sql" />
+    <Build Include="dbo\Tables\4DInvoiceLevel3.sql" />
+    <Build Include="dbo\Tables\4DInvoiceLevel4.sql" />
+    <Build Include="dbo\Stored Procedures\spInvoiceLevel3Entry_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\spInvoiceLevel4Entry_Insert.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DisneyPlayhouseDatabase.refactorlog" />
