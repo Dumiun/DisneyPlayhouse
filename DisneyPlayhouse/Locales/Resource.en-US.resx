@@ -117,11 +117,140 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActualBig" xml:space="preserve">
+    <value>Actual Big</value>
+  </data>
+  <data name="ActualSmall" xml:space="preserve">
+    <value>Actual Small</value>
+  </data>
+  <data name="AmountIs" xml:space="preserve">
+    <value>Amount :</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="BetHistory" xml:space="preserve">
+    <value>Bet History</value>
+  </data>
+  <data name="Big" xml:space="preserve">
+    <value>Big</value>
+  </data>
+  <data name="BigIs" xml:space="preserve">
+    <value>Big :</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="CreatedByIs" xml:space="preserve">
+    <value>Created By :</value>
+  </data>
+  <data name="CreateNewMember" xml:space="preserve">
+    <value>Create New Member</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="DrawDate1" xml:space="preserve">
+    <value>Draw Date 1</value>
+  </data>
+  <data name="DrawDate2" xml:space="preserve">
+    <value>Draw Date 2</value>
+  </data>
+  <data name="DrawDate3" xml:space="preserve">
+    <value>Draw Date 3</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="InvoiceDetailsFor" xml:space="preserve">
+    <value>Invoice Details For :</value>
+  </data>
+  <data name="InvoiceForIs" xml:space="preserve">
+    <value>Invoice For :</value>
+  </data>
   <data name="LanguageSelect" xml:space="preserve">
     <value>选择语言 ：</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="ManageAccountHeader" xml:space="preserve">
+    <value>Manage your Account</value>
+  </data>
   <data name="Member" xml:space="preserve">
     <value>Member</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="PageNameIs" xml:space="preserve">
+    <value>Page Name :</value>
+  </data>
+  <data name="PersonalData" xml:space="preserve">
+    <value>Personal Data</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="PlaceBets" xml:space="preserve">
+    <value>Place Bets</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Your Profile</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="Roll" xml:space="preserve">
+    <value>Roll</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SelectCurrency" xml:space="preserve">
+    <value>Select Currency</value>
+  </data>
+  <data name="SelectedCurrency" xml:space="preserve">
+    <value>Selected Currency :</value>
+  </data>
+  <data name="Small" xml:space="preserve">
+    <value>Small</value>
+  </data>
+  <data name="SmallIs" xml:space="preserve">
+    <value>Small :</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="TotalCost" xml:space="preserve">
+    <value>Total Cost</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Update Password</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Variations" xml:space="preserve">
+    <value>Variations</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Welcome to Disney Playhouse!</value>

@@ -1,17 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using DisneyPlayhouse.Data
+@inject IStringLocalizer<Resource> localizer
 
 @inject SignInManager<ApplicationUser> SignInManager
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">Profile</NavLink>
+        <NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">@localizer["Profile"]</NavLink>
     </li>
     <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/ChangePassword">Change Password</NavLink>
+            <NavLink class="nav-link" href="Account/Manage/ChangePassword">@localizer["ChangePassword"]</NavLink>
     </li>
     <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/PersonalData">Personal data</NavLink>
+            <NavLink class="nav-link" href="Account/Manage/PersonalData">@localizer["PersonalData"]</NavLink>
     </li>
 </ul>
 

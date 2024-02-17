@@ -3,6 +3,7 @@
 @implements IDisposable
 
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resource> localizer
 
 <div class="page">
     <div class="sidebar">
@@ -20,7 +21,7 @@
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                         <button type="submit" class="nav-link btn btn-danger text-light">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> @localizer["Logout"]
                         </button>
                     </form>
                 </Authorized>

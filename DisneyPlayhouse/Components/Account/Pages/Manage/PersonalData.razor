@@ -1,8 +1,9 @@
 ﻿@page "/Account/Manage/PersonalData"
 
 @inject IdentityUserAccessor UserAccessor
+@inject IStringLocalizer<Resource> localizer
 
-<PageTitle>Personal Data</PageTitle>
+<PageTitle>@localizer["PersonalData"]</PageTitle>
 
 <StatusMessage />
 
@@ -14,7 +15,7 @@
         </p>
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="btn btn-primary" type="submit">Download</button>
+                <button class="btn btn-primary" type="submit">@localizer["Download"]</button>
         </form>
     </div>
 </div>

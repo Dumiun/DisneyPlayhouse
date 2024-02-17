@@ -8,8 +8,9 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<Resource> localizer
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>@localizer["Profile"]</PageTitle>
 <StatusMessage />
 
 <div class="row">
@@ -19,24 +20,24 @@
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">@localizer["Username"]</label>
             </div>
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
-                <label for="phone-number" class="form-label">Phone number</label>
+                <label for="phone-number" class="form-label">@localizer["PhoneNumber"]</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
-            <label class="alert">Selected Currency : @currencyType</label>
+            <label class="alert">@localizer["SelectedCurrency"] @currencyType</label>
             <div class="form-floating mb-3">
                 <InputSelect @bind-Value="Input.CurrencyType" class="form-control">
-                    <option value="USD">Select Currency</option>
+                    <option value="USD">@localizer["SelectCurrency"]</option>
                     <option value="USD">USD($1:$1)</option>
                     <option value="SGD">SGD($:$0.75)</option>
                 </InputSelect>
-                <label for="currency-type" class="form-label">Currency</label>
+                <label for="currency-type" class="form-label">@localizer["Currency"]</label>
                 <ValidationMessage For="() => Input.CurrencyType" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">@localizer["Save"]</button>
         </EditForm>
     </div>
 </div>

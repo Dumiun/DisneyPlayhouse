@@ -117,13 +117,142 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActualBig" xml:space="preserve">
+    <value>总大</value>
+  </data>
+  <data name="ActualSmall" xml:space="preserve">
+    <value>总小</value>
+  </data>
+  <data name="AmountIs" xml:space="preserve">
+    <value>金额</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>后退</value>
+  </data>
+  <data name="BetHistory" xml:space="preserve">
+    <value>投注历史页</value>
+  </data>
+  <data name="Big" xml:space="preserve">
+    <value>大</value>
+  </data>
+  <data name="BigIs" xml:space="preserve">
+    <value>大</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>更改密码</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>确认新密码</value>
+  </data>
+  <data name="CreatedByIs" xml:space="preserve">
+    <value>由...制作：</value>
+  </data>
+  <data name="CreateNewMember" xml:space="preserve">
+    <value>创建新成员</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>货币</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>天</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="DrawDate1" xml:space="preserve">
+    <value>抽奖日期一</value>
+  </data>
+  <data name="DrawDate2" xml:space="preserve">
+    <value>抽奖日期二</value>
+  </data>
+  <data name="DrawDate3" xml:space="preserve">
+    <value>抽奖日期三</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="InvoiceDetailsFor" xml:space="preserve">
+    <value>发票详细信息 ：</value>
+  </data>
+  <data name="InvoiceForIs" xml:space="preserve">
+    <value>发票为</value>
+  </data>
   <data name="LanguageSelect" xml:space="preserve">
     <value>Language : </value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="ManageAccountHeader" xml:space="preserve">
+    <value>管理您的帐户</value>
   </data>
   <data name="Member" xml:space="preserve">
     <value>成员</value>
   </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>数字</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>旧密码</value>
+  </data>
+  <data name="PageNameIs" xml:space="preserve">
+    <value>页面名称</value>
+  </data>
+  <data name="PersonalData" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
+  <data name="PlaceBets" xml:space="preserve">
+    <value>下注页</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>你的个人资料</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>投注报告页</value>
+  </data>
+  <data name="Roll" xml:space="preserve">
+    <value>排</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存资料</value>
+  </data>
+  <data name="SelectCurrency" xml:space="preserve">
+    <value>选择货币</value>
+  </data>
+  <data name="SelectedCurrency" xml:space="preserve">
+    <value>所选货币</value>
+  </data>
+  <data name="Small" xml:space="preserve">
+    <value>小</value>
+  </data>
+  <data name="SmallIs" xml:space="preserve">
+    <value>小</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="TotalCost" xml:space="preserve">
+    <value>金额</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>更新密码</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Variations" xml:space="preserve">
+    <value>变化</value>
+  </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>欢迎来到Disney Playhouse！</value>
+    <value>欢迎来到 Disney Playhouse！</value>
   </data>
 </root>
