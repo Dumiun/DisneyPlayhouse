@@ -3,6 +3,7 @@
 @using DisneyPlayhouseLibrary.Models
 
 @inject IMemberData memberData
+@inject IStringLocalizer<Resource> localizer
 
 @if (names != null)
 {
@@ -11,9 +12,9 @@
         <div class="row">
             <div class="col-md-3">
                     <div class="form-group">
-                        <label for="nameSelect" class="form-label lead">Member ID:</label>
+                        <label for="nameSelect" class="form-label lead">@localizer["MemberId"]:</label>
                         <InputSelect @bind-Value="@betHistoryDetails.UserIdForRecords" class="form-control" id="nameSelect">
-                            <option value="">Please select a Name</option>
+                            <option value="">@localizer["SelectAMemberId"]</option>
                             @foreach (var name in names)
                             {
                                 <option value="@name.ChildId">@name.ChildId</option>
@@ -24,17 +25,17 @@
             <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-3">
-                            <label class="form-label lead">From:</label>
+                            <label class="form-label lead">@localizer["From"]:</label>
                             <InputDate @bind-Value="betHistoryDetails.FromDate" class="form-control"></InputDate>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label lead">To:</label>
+                            <label class="form-label lead">@localizer["To"]:</label>
                             <InputDate @bind-Value="betHistoryDetails.ToDate" class="form-control"></InputDate>
                         </div>
                         <div class="col-md-4">
                             <button type="submit" class="btn btn-success d-flex justify-content-center align-items-center h-75 w-100 mt-3">
                                 <i class="fa-solid fa-paper-plane" style="color: #ffffff;"></i>
-                                <span class="ms-2">Submit Search</span>
+                                <span class="ms-2">@localizer["SubmitSearch"]</span>
                             </button>
                         </div>
                         <div class="col-md-1">
