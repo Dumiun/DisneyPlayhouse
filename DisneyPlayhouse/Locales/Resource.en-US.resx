@@ -228,6 +228,12 @@
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="LoginID" xml:space="preserve">
+    <value>Login ID</value>
+  </data>
+  <data name="LogMeIn" xml:space="preserve">
+    <value>Log In</value>
+  </data>
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
@@ -267,6 +273,9 @@
   <data name="PageNameIs" xml:space="preserve">
     <value>Page Name :</value>
   </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
   <data name="PersonalData" xml:space="preserve">
     <value>Personal Data</value>
   </data>
@@ -278,6 +287,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Your Profile</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Remember Me</value>
   </data>
   <data name="Report" xml:space="preserve">
     <value>Reports</value>

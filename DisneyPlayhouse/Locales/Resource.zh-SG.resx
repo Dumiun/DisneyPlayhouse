@@ -228,6 +228,12 @@
   <data name="Login" xml:space="preserve">
     <value>登录</value>
   </data>
+  <data name="LoginID" xml:space="preserve">
+    <value>登录 ID</value>
+  </data>
+  <data name="LogMeIn" xml:space="preserve">
+    <value>登录</value>
+  </data>
   <data name="Logout" xml:space="preserve">
     <value>登出</value>
   </data>
@@ -267,6 +273,9 @@
   <data name="PageNameIs" xml:space="preserve">
     <value>页面名称</value>
   </data>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
   <data name="PersonalData" xml:space="preserve">
     <value>个人资料</value>
   </data>
@@ -278,6 +287,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>你的个人资料</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>记住账号</value>
   </data>
   <data name="Report" xml:space="preserve">
     <value>投注报告页</value>
