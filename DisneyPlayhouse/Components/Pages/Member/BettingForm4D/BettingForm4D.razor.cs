@@ -20,7 +20,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         private double TotalCostForDisplay;
         private bool DoubleCheckInvoice = false;
         [Parameter] public bool SubmitIsDisabled { get; set; }
-        public List<BettingForm4DEachEntryModel> Entries = Enumerable.Range(0, 60).Select(_ => new BettingForm4DEachEntryModel()).ToList();
+        public List<BettingForm4DEachEntryModel> Entries = Enumerable.Range(0, 150).Select(_ => new BettingForm4DEachEntryModel()).ToList();
 
         protected override async Task OnInitializedAsync()
         {
