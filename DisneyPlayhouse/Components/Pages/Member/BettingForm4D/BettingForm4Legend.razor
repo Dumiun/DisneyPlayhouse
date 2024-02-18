@@ -1,0 +1,50 @@
+﻿@inject IStringLocalizer<Resource> localizer
+
+<style>
+    .accordion-button:not(.collapsed) {
+        background-color: steelblue; /* Set your desired color for collapsed state here */
+        color: white; /* Set your desired text color for collapsed state here */
+    }
+
+    .accordion-button.collapsed {
+        background-color: seagreen; /* Set your desired active color here */
+        color: white; /* Set your desired active text color here */
+    }
+</style>
+
+<div class="accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                @localizer["DaysAndLegendDescription"]
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body bg-dark">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <span class="badge bg-success fs-6">@localizer["Days"] : </span>
+                        <span class="badge bg-light text-dark fs-6">1 - @localizer["WedSatSun"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">2 - @localizer["SatSun"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">3 - @localizer["Wed"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">6 - @localizer["Sat"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">7 - @localizer["Sun"]</span>&nbsp;
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <span class="badge bg-success fs-6">@localizer["Legend"] : </span>
+                        <span class="badge bg-light text-dark fs-6">@localizer["Blank"] - @localizer["Straight"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">F - @localizer["First3Roll"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">B - @localizer["Last3Roll"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">R - @localizer["Roll"]</span>&nbsp;
+                        <span class="badge bg-light text-dark fs-6">I - I-Bet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />

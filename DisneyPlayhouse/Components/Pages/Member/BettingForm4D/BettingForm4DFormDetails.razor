@@ -1,0 +1,71 @@
+﻿@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Data
+@using DisneyPlayhouseLibrary.Models
+
+@inject IStringLocalizer<Resource> localizer
+@inject IMemberData memberData
+
+<div class="card">
+    <div class="card-body bg-light">
+        <BettingForm4Legend></BettingForm4Legend>
+            <EditForm Model="betFormDetailsModel" FormName="BetFormDetails">
+                <div class="row">
+                    <div class="col-md-6">
+                    <b>@localizer["InvoiceForMemberId"]</b>
+                        <InputSelect Value="@betFormDetailsModel.BelongsToId" class="form-control"
+                        ValueExpression="@(()=>betFormDetailsModel.BelongsToId)" 
+                        ValueChanged="@((string value) => OnValueChangedBelongsToId(value))">
+                            <option value="">@localizer["SelectMemberId"]</option>
+                            <option value="@currentUserId">@currentUserId</option>
+                        @if (names != null && names.Count > 0)
+                        {
+                            @foreach (var name in names)
+                            {
+                                <option value="@name.ChildId">@name.ChildId</option>
+                            }
+                        }
+                        </InputSelect>
+                    </div>
+                <div class="col-md-3">
+                    <b>@localizer["PageNameIs"]</b>
+                    <InputText Value="@betFormDetailsModel.PageName"
+                               ValueExpression="@(()=>betFormDetailsModel.PageName)"
+                               ValueChanged="@((string value) => OnValueChangedPageName(value))" class="form-control"></InputText>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-success btn-lg btn-block mt-2 w-100" @onclick="@OnHandleSubmitForm" disabled="@SubmitDisabled">@localizer["SubmitForm"]</button>
+                </div>
+                </div>
+            <div class="row mt-4">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="totalBig" class="col-form-label"><b>@localizer["TotalSmall"]</b></label>
+                        </div>
+                        <div class="col-md-2">
+                            <InputNumber id="totalBig" @bind-Value="@TotalBig" class="form-control text-center text-success" style="font-weight:bold; font-size:large;" readonly></InputNumber>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="totalBig" class="col-form-label"><b>@localizer["TotalBig"]</b></label>
+                        </div>
+                        <div class="col-md-2">
+                            <InputNumber id="totalBig" @bind-Value="@TotalSmall" class="form-control text-center text-success" style="font-weight:bold; font-size:large;" readonly></InputNumber>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="totalBig" class="col-form-label"><b>@localizer["TotalMoneyAmount"]</b></label>
+                        </div>
+                        <div class="col-md-2">
+                            <InputNumber id="totalBig" @bind-Value="@TotalAmount" class="form-control text-center text-success" style="font-weight:bold; font-size:large;" readonly></InputNumber>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="col-md">
+                        <button type="button" class="btn btn-warning btn-lg btn-block mb-1 w-100" @onclick="@OnHandleResetForm">@localizer["ResetForm"]</button>
+                    </div>
+                    </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+

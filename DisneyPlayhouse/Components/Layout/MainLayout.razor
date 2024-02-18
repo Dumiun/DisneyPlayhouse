@@ -1,4 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.Extensions.Localization
+@inherits LayoutComponentBase
+@implements IDisposable
+
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resource> localizer
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +12,20 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <CultureSelector></CultureSelector>
+                    <TimeDisplay></TimeDisplay>
+                    <MemberBadge></MemberBadge>
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-link btn btn-danger text-light">
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> @localizer["Logout"]
+                        </button>
+                    </form>
+                </Authorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -21,3 +39,24 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code{
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+                        }

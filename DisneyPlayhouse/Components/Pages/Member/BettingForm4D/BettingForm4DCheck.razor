@@ -1,0 +1,122 @@
+﻿@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Data
+@using DisneyPlayhouseLibrary.Models
+@inject IInvoiceData invoiceData
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resource> localizer
+
+<div class="accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button bg-white text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                @localizer["InvoiceDetailsFor"] <strong>@InvoiceId</strong>
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body bg-dark">
+                <div class="row">
+                    <div class="col-md">
+                        <label class="col-form-label-md text-white"><strong>@localizer["InvoiceForIs"]</strong> <label class="text-warning">@InvoiceForWhoForCheck</label></label>
+                    </div>
+                    <div class="col-md">
+                        <label class="col-form-label-md text-white"><strong>@localizer["CreatedByIs"]</strong> <label class="text-warning">@InvoiceSubmittedByWhoForCheck</label></label>
+                    </div>
+                    <div class="col-md">
+                        <label class="col-form-label-md text-white"><strong>@localizer["PageNameIs"]</strong> <label class="text-warning">@InvoicePageNameForCheck</label></label>
+                    </div>
+                    <div class="col-md">
+                        <label class="col-form-label-md text-white"><strong>@localizer["BigIs"]</strong> <label class="text-warning">@TotalBigForCheck</label></label>
+                    </div>
+                    <div class="col-md">
+                        <label class="col-form-label-md text-white"><strong>@localizer["SmallIs"]</strong> <label class="text-warning">@TotalSmallForCheck</label></label>
+                    </div>
+                    <div class="col-md">
+                        <label class="col-form-label-md text-white"><strong>@localizer["AmountIs"]</strong> <label class="text-warning">$@TotalCostForCheck</label></label>
+                    </div>
+                    <div class="col-md">
+                        <button class="btn btn-danger" @onclick="@ReturnToForm">@localizer["Back"]</button>
+                        <button class="btn btn-success" @onclick="@SaveInvoiceToDB">@localizer["Submit"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center" style="font-size:small;">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>@localizer["Day"]</th>
+                    <th>@localizer["DrawDate1"]</th>
+                    <th>@localizer["DrawDate2"]</th>
+                    <th>@localizer["DrawDate3"]</th>
+                    <th>@localizer["Number"]</th>
+                    <th>@localizer["Variations"]</th>
+                    <th>@localizer["Big"]</th>
+                    <th>@localizer["ActualBig"]</th>
+                    <th>@localizer["Small"]</th>
+                    <th>@localizer["ActualSmall"]</th>
+                    <th>@localizer["Roll"]</th>
+                    <th>@localizer["TotalCost"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < EntriesForCheck.Count; i++)
+                {
+                    @if (!string.IsNullOrEmpty(EntriesForCheck[i].Number))
+                    {
+                        @if (EntriesForCheck[i].Number.Length == 4)
+                        {
+                            <tr>
+                                <td>@ListIndex</td>
+                                <td><b>@EntriesForCheck[i].Day</b></td>
+                                @if(EntriesForCheck[i].DrawDates.Count == 3)
+                                {
+                                    <td>@EntriesForCheck[i].DrawDates[0].ToLongDateString()</td>
+                                    <td>@EntriesForCheck[i].DrawDates[1].ToLongDateString()</td>
+                                    <td>@EntriesForCheck[i].DrawDates[2].ToLongDateString()</td>
+                                }
+                                else if(EntriesForCheck[i].DrawDates.Count == 2)
+                                {
+                                    <td>@EntriesForCheck[i].DrawDates[0].ToLongDateString()</td>
+                                    <td>@EntriesForCheck[i].DrawDates[1].ToLongDateString()</td>
+                                    <td>N/A</td>
+                                }
+                                else if(EntriesForCheck[i].DrawDates.Count == 1)
+                                {
+                                    <td>@EntriesForCheck[i].DrawDates[0].ToLongDateString()</td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                }
+                                <td><b>@EntriesForCheck[i].Number</b></td>
+                                <td>@EntriesForCheck[i].NumberVariations.Count</td>
+                                <td><b>@EntriesForCheck[i].Big</b></td>
+                                <td>@EntriesForCheck[i].ActualBig</td>
+                                <td><b>@EntriesForCheck[i].Small</b></td>
+                                <td>@EntriesForCheck[i].ActualSmall</td>
+                                <td><b>@EntriesForCheck[i].Roll</b></td>
+                                <td>$@EntriesForCheck[i].TotalCostForEntry</td>
+                            </tr>
+                            ListIndex++;
+                        }
+                    }
+                }
+                <tr class="text-dark fw-bolder">
+                    <td colspan="7"></td>
+                    <td>@localizer["ActualBig"]:</td>
+                    <td class="bg-warning text-dark">@TotalBigForCheck</td>
+                    <td>@localizer["ActualSmall"]:</td>
+                    <td class="bg-warning text-dark">@TotalSmallForCheck</td>
+                    <td>@localizer["TotalCost"]:</td>
+                    <td class="bg-success text-light">$@TotalCostForCheck</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -1,0 +1,81 @@
+﻿@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Data
+@using DisneyPlayhouseLibrary.Models
+
+@inject IMemberData memberData
+@inject IStringLocalizer<Resource> localizer
+
+@if (names != null)
+{
+    <EditForm Model="@betHistoryDetails" OnValidSubmit="HandleValidBetHistorySubmit">
+    <div class="alert alert-secondary" role="alert">
+        <div class="row">
+            <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="nameSelect" class="form-label lead">@localizer["MemberId"]:</label>
+                        <InputSelect @bind-Value="@betHistoryDetails.UserIdForRecords" class="form-control" id="nameSelect">
+                            <option value="">@localizer["SelectMemberId"]</option>
+                            <option value="@currentUserId">@currentUserId</option>
+                            @if (names != null && names.Count > 0)
+                            {
+                                @foreach (var name in names)
+                                {
+                                    <option value="@name.ChildId">@name.ChildId</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+            </div>
+            <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label lead">@localizer["From"]:</label>
+                            <InputDate @bind-Value="betHistoryDetails.FromDate" class="form-control"></InputDate>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label lead">@localizer["To"]:</label>
+                            <InputDate @bind-Value="betHistoryDetails.ToDate" class="form-control"></InputDate>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-success d-flex justify-content-center align-items-center h-75 w-100 mt-3">
+                                <i class="fa-solid fa-paper-plane" style="color: #ffffff;"></i>
+                                <span class="ms-2">@localizer["SubmitSearch"]</span>
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+    </EditForm>
+}
+
+
+@code {
+    private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
+    private ILib_BetHistoryDetailsModel betHistoryDetails = new BetHistoryDetailsModel();
+    [CascadingParameter] public Task<AuthenticationState> AuthStateTask { get; set; }
+    private string? currentUserId = "";
+    [Parameter] public EventCallback<string> BetHistoryForIdSet { get; set; }
+    [Parameter] public EventCallback<DateTime> BetHistoryFromDateSet { get; set; }
+    [Parameter] public EventCallback<DateTime> BetHistoryToDateSet { get; set; }
+    [Parameter] public EventCallback GetBetHistorySet { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthStateTask.Result.User.Identity.Name;
+        names = await memberData.GetListOfChildId(currentUserId);
+        betHistoryDetails.FromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        betHistoryDetails.ToDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+    }
+
+    private async Task HandleValidBetHistorySubmit()
+    {
+        await BetHistoryForIdSet.InvokeAsync(betHistoryDetails.UserIdForRecords);
+        await BetHistoryFromDateSet.InvokeAsync(betHistoryDetails.FromDate);
+        await BetHistoryToDateSet.InvokeAsync(betHistoryDetails.ToDate);
+        await GetBetHistorySet.InvokeAsync();
+    }
+}

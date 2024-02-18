@@ -1,0 +1,45 @@
+﻿@page "/BettingForm4D"
+@using DisneyPlayhouse.Models
+@inject NavigationManager NavigationManager
+<PageTitle>Betting Form 4D</PageTitle>
+
+@attribute [Authorize(Roles = "Member")]
+
+<AuthorizeView>
+    @if(DoubleCheckInvoice != true)
+    {
+        <BettingForm4DFormDetails OnBelongsToSet="SetInvoiceBelongsTo" OnPurchasedByWhoSet="SetInvoicePurchasedBy" PageNameSet="SetInvoicePageName" ResetFormSet="ResetForm" submitFormSet="SubmitInvoice" TotalBig="@TotalBigForDisplay" TotalSmall="@TotalSmallForDisplay" TotalAmount="@TotalCostForDisplay" SubmitDisabled="@SubmitIsDisabled"></BettingForm4DFormDetails>
+        <div class="container mt-4 table-responsive" style="font-size:small;">
+            <table class="table table-bordered table-striped text-center" >
+                <BetFormTableHeader></BetFormTableHeader>
+                <tbody>
+                    @for (int i = 0; i < Entries.Count; i += 3)
+                    {
+                        <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
+                            ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
+                        </BettingForm4DFields>
+                    }
+                    @if (AddRowClicked != true)
+                    {
+                        <tr>
+                            <td colspan="18">
+                                <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow">Add More Rows</button>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <BettingForm4DCheck TotalBigForCheck="@TotalBigForDisplay" TotalSmallForCheck="@TotalSmallForDisplay" TotalCostForCheck="@TotalCostForDisplay"
+                            InvoiceForWhoForCheck="@InvoiceBelongsTo" InvoicePageNameForCheck="@InvoicePageName" InvoiceSubmittedByWhoForCheck="@PurchasedById"
+                            EntriesForCheck="@Entries" InvoiceId="@InvoiceId" ReturnToFormSet="DisplayInvoice"></BettingForm4DCheck>
+    }
+
+</AuthorizeView>

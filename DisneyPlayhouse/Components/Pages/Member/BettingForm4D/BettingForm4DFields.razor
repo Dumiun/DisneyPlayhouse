@@ -1,0 +1,85 @@
+﻿
+<tr>
+    <td><label class="h5 mt-1 fw-bold">@(Id + 1)</label></td>
+    <td>
+        <select @onchange="UpdateDay" value="@Day" class="form-control" style="width:40px;">
+            @foreach (var dayOption in GetAvailableDays())
+            {
+                <option value="@dayOption">@dayOption</option>
+            }
+        </select>
+    </td>
+    <td>
+        <input type="text" @onchange="UpdateNumber" value="@Number" class="form-control" oninput="checkInput(this.value)" />
+    </td>
+    <td>
+        <input type="number" inputmode="numeric" @onchange="UpdateValueBig" value="@BigValue" class="form-control no-spinner" style="width:60px;" />
+    </td>
+    <td>
+        <input type="number" inputmode="numeric" @onchange="UpdateValueSmall" value="@SmallValue" class="form-control no-spinner" style="width:60px;" />
+    </td>
+    <td>
+        <select @onchange="UpdateRoll" value="@Roll" class="form-control" style="width:40px;">
+            <option value=""> </option>
+            <option value="F">F</option>
+            <option value="B">B</option>
+            <option value="R">R</option>
+            <option value="I">I</option>
+        </select>
+    </td>
+
+    <td><label class="h5 mt-1 fw-bold">@(Id2 + 1)</label></td>
+    <td>
+        <select @onchange="UpdateDay2" value="@Day2" class="form-control" style="width:40px;">
+            @foreach (var dayOption in GetAvailableDays())
+            {
+                <option value="@dayOption">@dayOption</option>
+            }
+        </select>
+    </td>
+    <td>
+        <input type="text" @onchange="UpdateNumber2" value="@Number2" class="form-control" />
+    </td>
+    <td>
+        <input type="number" inputmode="numeric" @onchange="UpdateValueBig2" value="@BigValue2" class="form-control no-spinner" style="width:60px;" />
+    </td>
+    <td>
+        <input type="number" inputmode="numeric" @onchange="UpdateValueSmall2" value="@SmallValue2" class="form-control no-spinner" style="width:60px;" />
+    </td>
+    <td>
+        <select @onchange="UpdateRoll2" value="@Roll2" class="form-control" style="width:40px;">
+            <option value=""> </option>
+            <option value="F">F</option>
+            <option value="B">B</option>
+            <option value="R">R</option>
+            <option value="I">I</option>
+        </select>
+    </td>
+    <td><label class="h5 mt-1 fw-bold">@(Id3 + 1)</label></td>
+    <td>
+        <select @onchange="UpdateDay3" value="@Day3" class="form-control" style="width:40px;">
+            @foreach (var dayOption in GetAvailableDays())
+            {
+                <option value="@dayOption">@dayOption</option>
+            }
+        </select>
+    </td>
+    <td>
+        <input type="text" @onchange="UpdateNumber3" value="@Number3" class="form-control" />
+    </td>
+    <td>
+        <input type="number" inputmode="numeric" @onchange="UpdateValueBig3" value="@BigValue3" class="form-control no-spinner" style="width:60px;" />
+    </td>
+    <td>
+        <input type="number" inputmode="numeric" @onchange="UpdateValueSmall3" value="@SmallValue3" class="form-control no-spinner" style="width:60px;" />
+    </td>
+    <td>
+        <select @onchange="UpdateRoll3" value="@Roll3" class="form-control" style="width:40px;">
+            <option value=""> </option>
+            <option value="F">F</option>
+            <option value="B">B</option>
+            <option value="R">R</option>
+            <option value="I">I</option>
+        </select>
+    </td>
+</tr>

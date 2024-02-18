@@ -1,0 +1,83 @@
+﻿@page "/Report4D"
+
+<PageTitle>Report 4D</PageTitle>
+
+@attribute [Authorize(Roles = "Member")]
+
+<AuthorizeView>
+    <Report4DSelectArea></Report4DSelectArea>
+
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr style="text-align:center;" class="table-dark text-center">
+                        <th scope="col">Draw Date</th>
+                        <th scope="col">Member ID</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Big</th>
+                        <th scope="col">Small</th>
+                        <th scope="col">Comms %</th>
+                        <th scope="col">Ticket Amt</th>
+                        <th scope="col">Actual Amt</th>
+                        <th scope="col">Strike Amt</th>
+                        <th scope="col">Balance</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align:center;" class="table-light">
+                    @if (false)
+                    {
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                4
+                            </td>
+                            <td>
+                                5
+                            </td>
+                            <td>
+                                6
+                            </td>
+                            <td>
+                                7
+                            </td>
+                            <td>
+                                8
+                            </td>
+                            <td>
+                                9
+                            </td>
+                            <td>
+                                10
+                            </td>
+                              <td>
+                                11
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th scope="col" colspan="12">
+                                No Data To Show
+                            </th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</AuthorizeView>
+@code {
+
+}

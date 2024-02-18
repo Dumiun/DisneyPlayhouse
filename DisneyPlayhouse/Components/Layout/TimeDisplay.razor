@@ -1,0 +1,23 @@
+﻿<a class="font-weight-bold text-decoration-none text-black">@DateTime.Now.ToLongDateString() @theTime</a>
+
+@code {
+    string theTime;
+    Timer aTimer;
+
+    protected override void OnInitialized()
+    {
+        aTimer = new Timer(Tick, null, 0, 1000);
+    }
+
+    private void Tick(object _)
+    {
+        TimeZoneInfo SGTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time");
+        DateTime singaporeTime = TimeZoneInfo.ConvertTime(DateTime.Now, SGTimeZone);
+        theTime = singaporeTime.ToLongTimeString();
+        InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        aTimer?.Dispose();
+    }
+}
