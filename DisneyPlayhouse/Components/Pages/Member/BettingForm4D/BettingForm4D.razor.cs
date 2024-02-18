@@ -9,6 +9,10 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         [Parameter] public string InvoicePageName { get; set; } = "";
         [Parameter] public string PurchasedById { get; set; } = "";
         public bool AddRowClicked { get; set; } = false;
+        public bool AddRowClicked2 { get; set; } = false;
+        public bool AddRowClicked3 { get; set; } = false;
+        public bool AddRowClicked4 { get; set; } = false;
+
         [Parameter] public string InvoiceId { get; set; } = "";
         private BigSmallModel BigSmallCost = new BigSmallModel();
         private double TotalBigForDisplay;
@@ -16,7 +20,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         private double TotalCostForDisplay;
         private bool DoubleCheckInvoice = false;
         [Parameter] public bool SubmitIsDisabled { get; set; }
-        public List<BettingForm4DEachEntryModel> Entries = Enumerable.Range(0, 30).Select(_ => new BettingForm4DEachEntryModel()).ToList();
+        public List<BettingForm4DEachEntryModel> Entries = Enumerable.Range(0, 60).Select(_ => new BettingForm4DEachEntryModel()).ToList();
 
         protected override async Task OnInitializedAsync()
         {
@@ -64,7 +68,6 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                     }
                 }
             }
-
             if (Entries[updatedValue.Index].Number != null)
             {
                 if (Entries[updatedValue.Index].Number.Length == 4 && Entries[updatedValue.Index].Day != 0)
@@ -76,6 +79,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                     Entries[updatedValue.Index].TotalCostForEntry = Entries[updatedValue.Index].BigCostForEntry + Entries[updatedValue.Index].SmallCostForEntry;
                 }
             }
+
             TotalBigForDisplay = Entries.Sum(x => x.ActualBig);
             TotalSmallForDisplay = Entries.Sum(x => x.ActualSmall);
             TotalCostForDisplay = Entries.Sum(x => x.TotalCostForEntry);
@@ -284,6 +288,18 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         private void AddRow()
         {
             AddRowClicked = true;
+        }
+        private void AddRow2()
+        {
+            AddRowClicked2 = true;
+        }
+        private void AddRow3()
+        {
+            AddRowClicked3 = true;
+        }
+        private void AddRow4()
+        {
+            AddRowClicked4 = true;
         }
     }
 }
