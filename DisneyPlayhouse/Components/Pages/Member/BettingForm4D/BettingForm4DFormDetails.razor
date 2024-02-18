@@ -12,18 +12,19 @@
                 <div class="row">
                     <div class="col-md-6">
                     <b>@localizer["InvoiceForMemberId"]</b>
-                    @if (@names != null && names.Any())
-                    {
                         <InputSelect Value="@betFormDetailsModel.BelongsToId" class="form-control"
                         ValueExpression="@(()=>betFormDetailsModel.BelongsToId)" 
                         ValueChanged="@((string value) => OnValueChangedBelongsToId(value))">
-                            <option value="">@localizer["SelectAMemberId"]</option>
+                            <option value="">@localizer["SelectMemberId"]</option>
+                            <option value="@currentUserId">@currentUserId</option>
+                        @if (names != null && names.Count > 0)
+                        {
                             @foreach (var name in names)
                             {
                                 <option value="@name.ChildId">@name.ChildId</option>
                             }
+                        }
                         </InputSelect>
-                    }
                     </div>
                 <div class="col-md-3">
                     <b>@localizer["PageNameIs"]</b>

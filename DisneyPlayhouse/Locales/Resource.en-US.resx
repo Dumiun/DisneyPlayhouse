@@ -318,6 +318,9 @@
   <data name="SelectedCurrency" xml:space="preserve">
     <value>Selected Currency :</value>
   </data>
+  <data name="SelectMemberId" xml:space="preserve">
+    <value>Select a Member ID</value>
+  </data>
   <data name="Small" xml:space="preserve">
     <value>Small</value>
   </data>

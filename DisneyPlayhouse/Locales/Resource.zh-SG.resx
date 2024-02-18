@@ -318,6 +318,9 @@
   <data name="SelectedCurrency" xml:space="preserve">
     <value>所选货币</value>
   </data>
+  <data name="SelectMemberId" xml:space="preserve">
+    <value>选择会员 ID</value>
+  </data>
   <data name="Small" xml:space="preserve">
     <value>小</value>
   </data>
