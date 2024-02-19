@@ -65,9 +65,9 @@
                                     {
                                         <tr>
                                             <td>@(i + 1)</td>
-                                            <td>@(DetailsForSelectedInvoice[i].DrawDate1 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate1.ToString() : "")</td>
-                                            <td>@(DetailsForSelectedInvoice[i].DrawDate2 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate2.ToString() : "")</td>
-                                            <td>@(DetailsForSelectedInvoice[i].DrawDate3 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate3.ToString() : "")</td>
+                                            <td>@(DetailsForSelectedInvoice[i].DrawDate1 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate1.ToLongDateString().ToString() : "")</td>
+                                            <td>@(DetailsForSelectedInvoice[i].DrawDate2 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate2.ToLongDateString().ToString() : "")</td>
+                                            <td>@(DetailsForSelectedInvoice[i].DrawDate3 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate3.ToLongDateString().ToString() : "")</td>
                                             <td>@DetailsForSelectedInvoice[i].Number</td>
                                             <td>@DetailsForSelectedInvoice[i].NoOfVariations</td>
                                             <td>@DetailsForSelectedInvoice[i].Big</td>
