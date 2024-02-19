@@ -80,6 +80,7 @@
     <Build Include="dbo\Stored Procedures\spInvoiceLevel4Entry_Insert.sql" />
     <Build Include="dbo\Stored Procedures\spBetHistoryForUserWithinDateRange.sql" />
     <Build Include="dbo\Stored Procedures\spDetailsOfSelectedInvoice.sql" />
+    <Build Include="dbo\Stored Procedures\spGetNumberVariationForSelectedNumberInInvoice.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DisneyPlayhouseDatabase.refactorlog" />

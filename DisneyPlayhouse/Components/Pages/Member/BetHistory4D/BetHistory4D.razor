@@ -23,7 +23,7 @@
 
 <AuthorizeView>
    <BetHistorySelectArea BetHistoryForIdSet="SetBetHistoryFor" BetHistoryFromDateSet="SetBetHistoryFrom" BetHistoryToDateSet="SetBetHistoryTo" GetBetHistorySet="SetBetHistoryDisplay"></BetHistorySelectArea>
-
+    <BetHistory4DPopUp @ref="popupRef" NumbersList="@NumberVariationsForSelectedInvoice"></BetHistory4DPopUp>
     <div class="accordion" style="font-size:small;">
     <div class="accordion-item">
         <h2 class="accordion-header">
@@ -45,12 +45,13 @@
                             <table class="table table-striped table-bordered table-hover">
                                 <thead class="text-white text-center bg-opacity-75 bg-dark">
                                 <tr>
-                                    <th>#</th>
+                                    <th>Index</th>
                                         <th>@localizer["DrawDate1"]</th>
                                         <th>@localizer["DrawDate2"]</th>
                                         <th>@localizer["DrawDate3"]</th>
                                         <th>@localizer["Number"]</th>
                                         <th>@localizer["VariationsAmt"]</th>
+                                        <th>View Vars.</th>
                                         <th>@localizer["Big"]</th>
                                         <th>@localizer["Small"]</th>
                                         <th>@localizer["Roll"]</th>
@@ -63,6 +64,8 @@
                             <tbody style="text-align:center;" class="table-light">
                                     @for (int i = 0; i < DetailsForSelectedInvoice.Count; i++)
                                     {
+                                        var currentDetails = DetailsForSelectedInvoice[i]; // Capture the current Details object
+                                        var uniqueId = "button_" + i; // Generate a unique identifier for the button
                                         <tr>
                                             <td>@(i + 1)</td>
                                             <td>@(DetailsForSelectedInvoice[i].DrawDate1 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate1.ToLongDateString().ToString() : "")</td>
@@ -70,6 +73,11 @@
                                             <td>@(DetailsForSelectedInvoice[i].DrawDate3 != DateTime.MinValue ? DetailsForSelectedInvoice[i].DrawDate3.ToLongDateString().ToString() : "")</td>
                                             <td>@DetailsForSelectedInvoice[i].Number</td>
                                             <td>@DetailsForSelectedInvoice[i].NoOfVariations</td>
+                                            <td>
+                                                <button id="@uniqueId" class="btn btn-sm btn-success" @onclick="() => DisplayNumberVariations(currentDetails)">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </td>
                                             <td>@DetailsForSelectedInvoice[i].Big</td>
                                             <td>@DetailsForSelectedInvoice[i].Small</td>
                                             <td>@DetailsForSelectedInvoice[i].Roll</td>
@@ -83,8 +91,8 @@
                                         <td colspan="3"></td>
                                         <td colspan="2"><b>@localizer["TotalVariations"]:</b></td>
                                         <td><b class="text-success">@TotalVar</b></td>
-                                        <td colspan="3"></td>
-                                        <td><b>@localizer["InvoiceTotal"]:</b> </td>
+                                        <td></td>
+                                        <td colspan="4"><b>@localizer["InvoiceTotal"]:</b> </td>
                                         <td><b class="text-success">@TotalBig</b></td>
                                         <td><b class="text-success">@TotalSmall</b></td>
                                         <td><b class="text-success">$@TotalAmount</b></td>
@@ -120,6 +128,7 @@
                                         <table class="table table-striped table-bordered table-hover">
                                         <thead class="text-white text-center bg-opacity-75 bg-dark">
                                             <tr>
+                                                    <th scope="col">Index</th>
                                                     <th scope="col">@localizer["Date"]</th>
                                                     <th scope="col">@localizer["Time"]</th>
                                                     <th scope="col">@localizer["InvoiceId"]</th>
@@ -135,9 +144,11 @@
                                         <tbody style="text-align:center;" class="table-warning">
                                             @if (BetHistoryInvoiceList.Count > 0)
                                             {
-                                                foreach (var invoice in BetHistoryInvoiceList)
+                                                for(int i = 0; i < BetHistoryInvoiceList.Count; i++)
                                                 {
+                                                    var invoice = BetHistoryInvoiceList[i];
                                                     <tr>
+                                                        <td>@(i+1)</td>
                                                         <td>@invoice.PurchasedDate.ToLongDateString()</td>
                                                         <td>@invoice.PurchasedDate.ToShortTimeString()</td>
                                                         <td>@invoice.InvoiceId</td>
@@ -179,12 +190,14 @@
     [Parameter] public DateTime BetHistoryTo { get; set; } 
     private List<ILib_InvoiceLevel1DataModel> BetHistoryInvoiceList = new List<ILib_InvoiceLevel1DataModel>();
     private List<ILib_InvoiceLevel2DataModel> DetailsForSelectedInvoice = new List<ILib_InvoiceLevel2DataModel>();
+    private List<ILib_InvoiceLevel4DataModel> NumberVariationsForSelectedInvoice = new List<ILib_InvoiceLevel4DataModel>();
     private string ViewInvoiceId { get; set; } = "";
     private bool disableInvoiceDetailsView = true;
     private int TotalVar = 0;
     private double TotalBig = 0;
     private int TotalSmall = 0;
     private double TotalAmount = 0;
+    private BetHistory4DPopUp popupRef;
 
 
     private void SetBetHistoryFor(string value)
@@ -217,5 +230,10 @@
         TotalBig = invoice.TotalBig;
         TotalSmall = invoice.TotalSmall;
         TotalAmount = invoice.TotalAmount;
+    }
+    private async Task DisplayNumberVariations(ILib_InvoiceLevel2DataModel invoice)
+    {
+        NumberVariationsForSelectedInvoice = await invoiceData.GetNumberVariationsOfSelectedNumberInInvoice(invoice.InvoiceId, invoice.Number);
+        popupRef.Show();
     }
 }

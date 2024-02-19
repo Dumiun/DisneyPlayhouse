@@ -98,5 +98,11 @@ namespace DisneyPlayhouseLibrary.Data
             var list = await _dataAccess.LoadData<Lib_InvoiceLevel2DataModel, dynamic>("dbo.spDetailsOfSelectedInvoice", new { invoiceId = invoiceId }, "DefaultConnection");
             return list.ToList<ILib_InvoiceLevel2DataModel>();
         }
+
+        public async Task<List<ILib_InvoiceLevel4DataModel>> GetNumberVariationsOfSelectedNumberInInvoice(string invoiceId, string number)
+        {
+            var list = await _dataAccess.LoadData<Lib_InvoiceLevel4DataModel, dynamic>("dbo.spGetNumberVariationForSelectedNumberInInvoice", new { InvoiceId = invoiceId, PurchasedNumber = number }, "DefaultConnection");
+            return list.ToList<ILib_InvoiceLevel4DataModel>();
+        }
     }
 }

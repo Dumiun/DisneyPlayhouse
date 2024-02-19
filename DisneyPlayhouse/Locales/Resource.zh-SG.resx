@@ -376,7 +376,7 @@
     <value>变化</value>
   </data>
   <data name="VariationsAmt" xml:space="preserve">
-    <value>变化量</value>
+    <value>总变化</value>
   </data>
   <data name="Wed" xml:space="preserve">
     <value>周三</value>
