@@ -1,5 +1,44 @@
-﻿<h3>BetFormDisabled</h3>
+﻿<div class="alert alert-danger">4D Betting is current : <b>CLOSED</b></div>
+
+<center>
+
+    <h1 class="font-weight-bold">@theTime</h1>
+    <h3 class="font-weight-bold">Betting will reopen in about @theRemainingTime</h3>
+</center>
 
 @code {
+    string theTime;
+    string theRemainingTime;
+    Timer aTimer;
 
+    protected override void OnInitialized()
+    {
+        aTimer = new Timer(Tick, null, 0, 1000);
+    }
+
+    private void Tick(object _)
+    {
+        TimeZoneInfo SGTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time");
+        DateTime singaporeTime = TimeZoneInfo.ConvertTime(DateTime.Now, SGTimeZone);
+
+        DateTime targetTime = singaporeTime.Date.AddHours(20); // 19:00 today
+
+        TimeSpan remainingTime = targetTime - singaporeTime;
+
+        // If the target time has passed for today, add one day to the target time
+        if (remainingTime.TotalSeconds < 0)
+        {
+            targetTime = targetTime.AddDays(1);
+            remainingTime = targetTime - singaporeTime;
+        }
+
+        theTime = singaporeTime.ToLongTimeString();
+        theRemainingTime = remainingTime.ToString(@"hh\:mm\:ss");
+
+        InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        aTimer?.Dispose();
+    }
 }
