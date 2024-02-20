@@ -49,6 +49,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddSingleton<IDataAccessService, DataAccessService>();
 builder.Services.AddScoped<IMemberData, MemberData>();
 builder.Services.AddScoped<IInvoiceData, InvoiceData>();
+builder.Services.AddScoped<IReportData, ReportData>();
 
 var app = builder.Build();
 

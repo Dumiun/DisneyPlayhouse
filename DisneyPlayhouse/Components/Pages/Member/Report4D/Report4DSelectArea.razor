@@ -1,4 +1,9 @@
 ﻿@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Data
+@using DisneyPlayhouseLibrary.Models
+
+@inject IReportData reportData
+
 <div class="alert alert-secondary" role="alert">
     <div class="row">
         <div class="col-md-10">
@@ -15,7 +20,7 @@
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-success d-flex justify-content-center align-items-center h-75 w-100 mt-3">
                             <i class="fa-solid fa-paper-plane" style="color: #ffffff;"></i>
-                            <span class="ms-2">Submit Search</span>
+                            <span class="ms-2" @onclick="HandlePageReportSubmit">Submit Search</span>
                         </button>
                     </div>
                     <div class="col-md-1">
@@ -65,14 +70,35 @@
 </div>
 
 @code {
-    private ReportHistoryModel reportHistoryModel = new ReportHistoryModel();
+    private ILib_ReportHistoryModel reportHistoryModel = new ReportHistoryModel();
     [CascadingParameter]
     public Task<AuthenticationState> AuthStateTask { get; set; }
+    private List<PageReportRowForChildModel> pageReportRowForChildModel = new List<PageReportRowForChildModel>();
 
     protected override async Task OnInitializedAsync()
     {
         reportHistoryModel.ReportForId = AuthStateTask.Result.User.Identity.Name;
         reportHistoryModel.FromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
         reportHistoryModel.ToDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+    }
+
+    //async task for submit button
+    private async Task HandlePageReportSubmit()
+    {
+        List<List<Lib_InvoiceLevel1DataModel>> invoiceLevel1DataModels = new List<List<Lib_InvoiceLevel1DataModel>>();
+        List<PageReportRowForChildModel> TotalForEachChild = new List<PageReportRowForChildModel>();
+
+        invoiceLevel1DataModels = await reportData.GetNumberVariationsOfSelectedNumberInInvoice(reportHistoryModel);
+
+        foreach(var item in invoiceLevel1DataModels)
+        {
+            PageReportRowForChildModel pageReportRowForChildModel = new PageReportRowForChildModel();
+            pageReportRowForChildModel.MemberId = item[0].PurchasedForId;
+            pageReportRowForChildModel.TotalBig = item.Sum (x => x.TotalBig);
+            pageReportRowForChildModel.TotalSmall = item.Sum(x => x.TotalSmall);
+            pageReportRowForChildModel.TotalAmount = item.Sum(x => x.TotalAmount);
+            pageReportRowForChildModel.StrikeAmount = item.Sum (x => x.StrikeAmount);
+            TotalForEachChild.Add(pageReportRowForChildModel);
+        }
     }
 }

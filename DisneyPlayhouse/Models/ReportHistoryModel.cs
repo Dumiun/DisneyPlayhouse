@@ -1,6 +1,8 @@
-﻿namespace DisneyPlayhouse.Models
+﻿using DisneyPlayhouseLibrary.Models;
+
+namespace DisneyPlayhouse.Models
 {
-    public class ReportHistoryModel
+    public class ReportHistoryModel : ILib_ReportHistoryModel
     {
         public string ReportForId { get; set; }
         public DateTime FromDate { get; set; }
