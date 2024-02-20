@@ -13,6 +13,9 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         public bool AddRowClicked3 { get; set; } = false;
         public bool AddRowClicked4 { get; set; } = false;
 
+        public DateTime TimeNow;
+        private DateTime specifiedTime1 = DateTime.Today.Add(new TimeSpan(16, 30, 0)); // 4:30 PM
+        private DateTime specifiedTime2 = DateTime.Today.Add(new TimeSpan(19, 00, 0)); // 7:00 PM
         [Parameter] public string InvoiceId { get; set; } = "";
         private BigSmallModel BigSmallCost = new BigSmallModel();
         private double TotalBigForDisplay;
@@ -28,6 +31,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 SubmitIsDisabled = true;
             }
+            TimeNow = DateTime.Now;
         }
 
         private void UpdateAll((dynamic Value, int Index, string Action) updatedValue)
@@ -163,77 +167,81 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         //Calculation for Number Draw Dates
         private List<DateTime> GetDrawDatesForEntry(int input)
         {
-            DateTime currentDate = DateTime.Now;
-            // Find the current week's Wednesday, Saturday, and Sunday
-            DateTime currentWeekWed = GetDayInCurrentWeek(currentDate, DayOfWeek.Wednesday);
-            DateTime currentWeekSat = GetDayInCurrentWeek(currentDate, DayOfWeek.Saturday);
-            DateTime currentWeekSun = GetDayInCurrentWeek(currentDate, DayOfWeek.Sunday);
+            // My Code - Fiverr Start
 
-            // Find the next week's Wednesday, Saturday, and Sunday
-            DateTime nextWeekWed = GetNextWeekDay(currentDate, DayOfWeek.Wednesday);
-            DateTime nextWeekSat = GetNextWeekDay(currentDate, DayOfWeek.Saturday);
-            DateTime nextWeekSun = GetNextWeekDay(currentDate, DayOfWeek.Sunday);
+            List<DateTime> dates = new List<DateTime>();
 
-            if (((currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour >= 16) || currentDate.DayOfWeek == DayOfWeek.Monday || currentDate.DayOfWeek == DayOfWeek.Tuesday || (currentDate.DayOfWeek == DayOfWeek.Wednesday && currentDate.Hour < 16)) && input == 1)
+            DayOfWeek currentDay = DateTime.Now.DayOfWeek;
+            TimeSpan currentTime = DateTime.Now.TimeOfDay;
+
+            switch (input)
             {
-                return new List<DateTime>
-                    { currentWeekWed, currentWeekSat, currentWeekSun };
+                case 1:
+                    if (currentDay == DayOfWeek.Monday || currentDay == DayOfWeek.Tuesday)
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Wednesday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    }
+                    else if (currentDay == DayOfWeek.Wednesday && currentTime < new TimeSpan(16, 30, 0))
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Wednesday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    }
+                    else if (currentDay == DayOfWeek.Wednesday && currentTime >= new TimeSpan(16, 30, 0))
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Wednesday, 7));
+                        dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    }
+                    else if (currentDay == DayOfWeek.Thursday || currentDay == DayOfWeek.Friday)
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Wednesday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    }
+                    else if (currentDay == DayOfWeek.Saturday && currentTime < new TimeSpan(16, 30, 0))
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Wednesday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    }
+                    else if (currentDay == DayOfWeek.Sunday && currentTime < new TimeSpan(16, 30, 0))
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    }
+                    else if (currentDay == DayOfWeek.Sunday && currentTime >= new TimeSpan(16, 30, 0))
+                    {
+                        dates.Add(GetNextWeekday(DayOfWeek.Wednesday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                        dates.Add(GetNextWeekday(DayOfWeek.Sunday, 7));
+                    }
+                    break;
+
+                case 2:
+                    dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                    dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    break;
+
+                case 3:
+                    dates.Add(GetNextWeekday(DayOfWeek.Wednesday));
+                    break;
+
+                case 6:
+                    dates.Add(GetNextWeekday(DayOfWeek.Saturday));
+                    break;
+
+                case 7:
+                    dates.Add(GetNextWeekday(DayOfWeek.Sunday));
+                    break;
+
+                default:
+                    break;
             }
-            if (((currentDate.DayOfWeek == DayOfWeek.Wednesday && currentDate.Hour >= 16) || currentDate.DayOfWeek == DayOfWeek.Thursday || currentDate.DayOfWeek == DayOfWeek.Friday || (currentDate.DayOfWeek == DayOfWeek.Saturday && currentDate.Hour < 16)) && input == 1)
-            {
-                return new List<DateTime>
-                    { currentWeekSat, currentWeekSun, nextWeekWed };
-            }
-            if (currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour > 16 && input == 1)
-            {
-                return new List<DateTime>
-                    { nextWeekWed, nextWeekSat, nextWeekSun };
-            }
-            if ((currentDate.DayOfWeek == DayOfWeek.Monday || currentDate.DayOfWeek == DayOfWeek.Tuesday || currentDate.DayOfWeek == DayOfWeek.Wednesday
-            || currentDate.DayOfWeek == DayOfWeek.Thursday || currentDate.DayOfWeek == DayOfWeek.Friday || (currentDate.DayOfWeek == DayOfWeek.Saturday && currentDate.Hour < 16)) && input == 2)
-            {
-                return new List<DateTime>
-                    { currentWeekSat, currentWeekSun };
-            }
-            if (currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour > 16 && input == 2)
-            {
-                return new List<DateTime>
-                    { nextWeekSat, nextWeekSun };
-            }
-            if ((currentDate.DayOfWeek == DayOfWeek.Monday || currentDate.DayOfWeek == DayOfWeek.Tuesday || (currentDate.DayOfWeek == DayOfWeek.Wednesday && currentDate.Hour < 16)) && input == 3)
-            {
-                return new List<DateTime>
-                    { currentWeekWed };
-            }
-            if (currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour > 16 && input == 3)
-            {
-                return new List<DateTime>
-                    { nextWeekWed };
-            }
-            if ((currentDate.DayOfWeek == DayOfWeek.Monday || currentDate.DayOfWeek == DayOfWeek.Tuesday || currentDate.DayOfWeek == DayOfWeek.Wednesday
-            || currentDate.DayOfWeek == DayOfWeek.Thursday || currentDate.DayOfWeek == DayOfWeek.Friday || (currentDate.DayOfWeek == DayOfWeek.Saturday && currentDate.Hour < 16)) && input == 6)
-            {
-                return new List<DateTime>
-                    { currentWeekSat };
-            }
-            if (currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour > 16 && input == 6)
-            {
-                return new List<DateTime>
-                    { nextWeekSat };
-            }
-            if ((currentDate.DayOfWeek == DayOfWeek.Monday || currentDate.DayOfWeek == DayOfWeek.Tuesday || currentDate.DayOfWeek == DayOfWeek.Wednesday
-            || currentDate.DayOfWeek == DayOfWeek.Thursday || currentDate.DayOfWeek == DayOfWeek.Friday || currentDate.DayOfWeek == DayOfWeek.Saturday || (currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour < 16)) && input == 7)
-            {
-                return new List<DateTime>
-                    { currentWeekSun };
-            }
-            if (currentDate.DayOfWeek == DayOfWeek.Sunday && currentDate.Hour > 16 && input == 7)
-            {
-                return new List<DateTime>
-                    { nextWeekSun };
-            }
-            return new List<DateTime>
-            { };
+
+            return dates;
+            //My Code -Fiverr End
         }
 
         private static DateTime GetDayInCurrentWeek(DateTime currentDate, DayOfWeek targetDay)
@@ -248,6 +256,14 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             return currentDate.AddDays(daysUntilTargetDay + 7);
         }
 
+        //My Code - Fiverr Start
+        private static DateTime GetNextWeekday(DayOfWeek day, int offset = 0)
+        {
+            int daysUntil = ((int)day - (int)DateTime.Now.DayOfWeek + 7) % 7 + offset;
+            return DateTime.Now.Date.AddDays(daysUntil);
+        }
+
+        // My Code - Fiverr End
         private void SetInvoiceBelongsTo(string value)
         {
             InvoiceBelongsTo = value;
@@ -289,14 +305,17 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         {
             AddRowClicked = true;
         }
+
         private void AddRow2()
         {
             AddRowClicked2 = true;
         }
+
         private void AddRow3()
         {
             AddRowClicked3 = true;
         }
+
         private void AddRow4()
         {
             AddRowClicked4 = true;

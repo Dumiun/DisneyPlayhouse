@@ -23,6 +23,12 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         [Parameter] public string Roll { get; set; }
         [Parameter] public string Roll2 { get; set; }
         [Parameter] public string Roll3 { get; set; }
+        [Parameter] public string SelectColor { get; set; }
+        [Parameter] public string SelectColor1 { get; set; }
+        [Parameter] public string SelectColor2 { get; set; }
+        [Parameter] public string IsValid { get; set; }
+        [Parameter] public string IsValid2 { get; set; }
+        [Parameter] public string IsValid3 { get; set; }
         [Parameter] public EventCallback<ValueTuple<dynamic, int, string>> ValueChangedSmall { get; set; }
         [Parameter] public EventCallback<ValueTuple<dynamic, int, string>> ValueChangedBig { get; set; }
         [Parameter] public EventCallback<ValueTuple<dynamic, int, string>> ValueChangedNumber { get; set; }
@@ -35,6 +41,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 Action = "UpdateSmall";
                 SmallValue = inputValue;
+                IsValid = checkValidity();
                 await ValueChangedSmall.InvokeAsync((SmallValue, Id, Action));
             }
         }
@@ -45,6 +52,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 Action = "UpdateSmall";
                 SmallValue2 = inputValue;
+                IsValid2 = checkValidity1();
                 await ValueChangedSmall.InvokeAsync((SmallValue2, Id2, Action));
             }
         }
@@ -55,6 +63,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 Action = "UpdateSmall";
                 SmallValue3 = inputValue;
+                IsValid3 = checkValidity2();
                 await ValueChangedSmall.InvokeAsync((SmallValue3, Id3, Action));
             }
         }
@@ -73,6 +82,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 {
                     BigValue = 0; // Set to default value when input is not valid
                 }
+                IsValid = checkValidity();
             }
         }
 
@@ -90,6 +100,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 {
                     BigValue = 0; // Set to default value when input is not valid
                 }
+                IsValid2 = checkValidity1();
             }
         }
 
@@ -101,12 +112,14 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 {
                     Action = "UpdateBig";
                     BigValue3 = inputValue;
+                    IsValid3 = checkValidity2();
                     await ValueChangedBig.InvokeAsync((BigValue3, Id3, Action));
                 }
                 else
                 {
                     BigValue = 0; // Set to default value when input is not valid
                 }
+                IsValid3 = checkValidity2();
             }
         }
 
@@ -121,6 +134,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 Number = " ";
             }
             Action = "UpdateNumber";
+            IsValid = checkValidity();
             await ValueChangedNumber.InvokeAsync((Number, Id, Action));
         }
 
@@ -135,6 +149,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 Number2 = " ";
             }
             Action = "UpdateNumber";
+            IsValid2 = checkValidity1();
             await ValueChangedNumber.InvokeAsync((Number2, Id2, Action));
         }
 
@@ -149,6 +164,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 Number3 = " ";
             }
             Action = "UpdateNumber";
+            IsValid3 = checkValidity2();
             await ValueChangedNumber.InvokeAsync((Number3, Id3, Action));
         }
 
@@ -158,6 +174,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 Action = "UpdateDay";
                 Day = inputValue;
+                IsValid = checkValidity();
                 await ValueChangedDay.InvokeAsync((Day, Id, Action));
             }
         }
@@ -168,6 +185,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 Action = "UpdateDay";
                 Day2 = inputValue;
+                IsValid2 = checkValidity1();
                 await ValueChangedDay.InvokeAsync((Day2, Id2, Action));
             }
         }
@@ -178,6 +196,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
             {
                 Action = "UpdateDay";
                 Day3 = inputValue;
+                IsValid3 = checkValidity2();
                 await ValueChangedDay.InvokeAsync((Day3, Id3, Action));
             }
         }
@@ -186,6 +205,8 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         {
             Action = "UpdateRoll";
             Roll = e.Value.ToString();
+            SelectColor = selectRollColor(Roll);
+            IsValid = checkValidity();
             await ValueChangedRoll.InvokeAsync((Roll, Id, Action));
         }
 
@@ -193,6 +214,8 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         {
             Action = "UpdateRoll";
             Roll2 = e.Value.ToString();
+            SelectColor1 = selectRollColor(Roll2);
+            IsValid2 = checkValidity1();
             await ValueChangedRoll.InvokeAsync((Roll2, Id2, Action));
         }
 
@@ -200,6 +223,8 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         {
             Action = "UpdateRoll";
             Roll3 = e.Value.ToString();
+            SelectColor2 = selectRollColor(Roll3);
+            IsValid3 = checkValidity2();
             await ValueChangedRoll.InvokeAsync((Roll3, Id3, Action));
         }
 
@@ -261,6 +286,88 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         private bool IsValidInput(double value)
         {
             return Math.Floor(value) == value || Math.Floor(value * 2) == value * 2;
+        }
+
+        private bool isValid(int day, string number, double big, int small)
+        {
+            bool Success = false;
+            if (!day.Equals(0))
+            {
+                Success = true;
+            }
+            if (!string.IsNullOrEmpty(number))
+            {
+                Success = number.Length.Equals(4) ? true : false;
+            }
+            if (big != 0 || small != 0)
+            {
+                Success = true;
+            }
+            else
+            {
+                Success = false;
+            }
+            return Success;
+        }
+
+        private string selectRollColor(string roll)
+        {
+            if (roll == "F")
+            {
+                return "Yellow";
+            }
+            if (roll == "B")
+            {
+                return "Purple";
+            }
+            if (roll == "R")
+            {
+                return "Brown";
+            }
+            if (roll == "I")
+            {
+                return "Orange";
+            }
+            return string.Empty;
+        }
+
+        private string checkValidity()
+        {
+            if (!Day.Equals(0) && (BigValue != 0 || SmallValue != 0) && (!string.IsNullOrEmpty(Number) && Number.Length.Equals(4)))
+            {
+                IsValid = "LightGreen";
+            }
+            else
+            {
+                IsValid = "Red";
+            }
+            return IsValid;
+        }
+
+        private string checkValidity1()
+        {
+            if (!Day2.Equals(0) && (BigValue2 != 0 || SmallValue2 != 0) && (!string.IsNullOrEmpty(Number2) && Number2.Length.Equals(4)))
+            {
+                IsValid2 = "LightGreen";
+            }
+            else
+            {
+                IsValid2 = "Red";
+            }
+            return IsValid2;
+        }
+
+        private string checkValidity2()
+        {
+            if (!Day3.Equals(0) && (BigValue3 != 0 || SmallValue3 != 0) && (!string.IsNullOrEmpty(Number3) && Number3.Length.Equals(4)))
+            {
+                IsValid3 = "LightGreen";
+            }
+            else
+            {
+                IsValid3 = "Red";
+            }
+            return IsValid3;
         }
     }
 }

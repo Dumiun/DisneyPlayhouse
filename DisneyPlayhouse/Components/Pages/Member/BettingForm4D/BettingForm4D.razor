@@ -6,101 +6,109 @@
 @attribute [Authorize(Roles = "Member")]
 
 <AuthorizeView>
-    @if(DoubleCheckInvoice != true)
+
+    @if (TimeNow < specifiedTime1 || TimeNow > specifiedTime2)
     {
-        <BettingForm4DFormDetails OnBelongsToSet="SetInvoiceBelongsTo" OnPurchasedByWhoSet="SetInvoicePurchasedBy" PageNameSet="SetInvoicePageName" ResetFormSet="ResetForm" submitFormSet="SubmitInvoice" TotalBig="@TotalBigForDisplay" TotalSmall="@TotalSmallForDisplay" TotalAmount="@TotalCostForDisplay" SubmitDisabled="@SubmitIsDisabled"></BettingForm4DFormDetails>
-        <div class="container mt-4 table-responsive" style="font-size:small;">
-            <table class="table table-bordered table-striped text-center" >
-                <BetFormTableHeader></BetFormTableHeader>
-                <tbody>
-                    @for (int i = 0; i < 30; i += 3)
-                    {
-                        <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
-                            ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
-                        </BettingForm4DFields>
-                    }
-                    @if (AddRowClicked != true)
-                    {
-                        <tr>
-                            <td colspan="18">
-                                <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow">Add More Rows</button>
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @for (int i = 30; i < 60; i += 3)
+        @if (DoubleCheckInvoice != true)
+        {
+            <BettingForm4DFormDetails OnBelongsToSet="SetInvoiceBelongsTo" OnPurchasedByWhoSet="SetInvoicePurchasedBy" PageNameSet="SetInvoicePageName" ResetFormSet="ResetForm" submitFormSet="SubmitInvoice" TotalBig="@TotalBigForDisplay" TotalSmall="@TotalSmallForDisplay" TotalAmount="@TotalCostForDisplay" SubmitDisabled="@SubmitIsDisabled"></BettingForm4DFormDetails>
+            <div class="container mt-4 table-responsive" style="font-size:small;">
+                <table class="table table-bordered table-striped text-center">
+                    <BetFormTableHeader></BetFormTableHeader>
+                    <tbody>
+                        @for (int i = 0; i < 30; i += 3)
                         {
                             <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
                                                  ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
                             </BettingForm4DFields>
                         }
-                    }
-                    @if (AddRowClicked2 != true && AddRowClicked == true)
-                    {
-                        <tr>
-                            <td colspan="18">
-                                <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow2">Add More Rows</button>
-                            </td>
-                        </tr>
-                    }
-                    else if (AddRowClicked2 == true)
-                    {
-                        @for (int i = 60; i < 90; i += 3)
+                        @if (AddRowClicked != true)
                         {
-                            <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
-                                                 ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
-                            </BettingForm4DFields>
+                            <tr>
+                                <td colspan="18">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow">Add More Rows</button>
+                                </td>
+                            </tr>
                         }
-                    }
-                    @if (AddRowClicked2 == true && AddRowClicked3 != true)
-                    {
-                        <tr>
-                            <td colspan="18">
-                                <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow3">Add More Rows</button>
-                            </td>
-                        </tr>
-                    }
-                    else if (AddRowClicked3 == true)
-                    {
-                        @for (int i = 90; i < 120; i += 3)
+                        else
                         {
-                            <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
-                                                 ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
-                            </BettingForm4DFields>
+                            @for (int i = 30; i < 60; i += 3)
+                            {
+                                <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
+                                                     ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
+                                </BettingForm4DFields>
+                            }
                         }
-                    }
-                    @if (AddRowClicked3 == true && AddRowClicked4 != true)
-                    {
-                        <tr>
-                            <td colspan="18">
-                                <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow4">Add More Rows</button>
-                            </td>
-                        </tr>
-                    }
-                    else if (AddRowClicked4 == true)
-                    {
-                        @for (int i = 120; i < 150; i += 3)
+                        @if (AddRowClicked2 != true && AddRowClicked == true)
                         {
-                            <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
-                                                 ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
-                            </BettingForm4DFields>
+                            <tr>
+                                <td colspan="18">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow2">Add More Rows</button>
+                                </td>
+                            </tr>
                         }
-                        <tr>
-                            <td colspan="18">
-                                <button type="button" class="btn btn-danger btn-lg btn-block" disabled>Maximum Rows Reached</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                        else if (AddRowClicked2 == true)
+                        {
+                            @for (int i = 60; i < 90; i += 3)
+                            {
+                                <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
+                                                     ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
+                                </BettingForm4DFields>
+                            }
+                        }
+                        @if (AddRowClicked2 == true && AddRowClicked3 != true)
+                        {
+                            <tr>
+                                <td colspan="18">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow3">Add More Rows</button>
+                                </td>
+                            </tr>
+                        }
+                        else if (AddRowClicked3 == true)
+                        {
+                            @for (int i = 90; i < 120; i += 3)
+                            {
+                                <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
+                                                     ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
+                                </BettingForm4DFields>
+                            }
+                        }
+                        @if (AddRowClicked3 == true && AddRowClicked4 != true)
+                        {
+                            <tr>
+                                <td colspan="18">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block" @onclick="AddRow4">Add More Rows</button>
+                                </td>
+                            </tr>
+                        }
+                        else if (AddRowClicked4 == true)
+                        {
+                            @for (int i = 120; i < 150; i += 3)
+                            {
+                                <BettingForm4DFields Id="@i" Id2="(i + 1)" Id3="(i + 2)"
+                                                     ValueChangedSmall="UpdateAll" ValueChangedBig="UpdateAll" ValueChangedNumber="UpdateAll" ValueChangedDay="UpdateAll" ValueChangedRoll="UpdateAll">
+                                </BettingForm4DFields>
+                            }
+                            <tr>
+                                <td colspan="18">
+                                    <button type="button" class="btn btn-danger btn-lg btn-block" disabled>Maximum Rows Reached</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <BettingForm4DCheck TotalBigForCheck="@TotalBigForDisplay" TotalSmallForCheck="@TotalSmallForDisplay" TotalCostForCheck="@TotalCostForDisplay"
+                                InvoiceForWhoForCheck="@InvoiceBelongsTo" InvoicePageNameForCheck="@InvoicePageName" InvoiceSubmittedByWhoForCheck="@PurchasedById"
+                                EntriesForCheck="@Entries" InvoiceId="@InvoiceId" ReturnToFormSet="DisplayInvoice"></BettingForm4DCheck>
+        }
     }
     else
     {
-        <BettingForm4DCheck TotalBigForCheck="@TotalBigForDisplay" TotalSmallForCheck="@TotalSmallForDisplay" TotalCostForCheck="@TotalCostForDisplay"
-                            InvoiceForWhoForCheck="@InvoiceBelongsTo" InvoicePageNameForCheck="@InvoicePageName" InvoiceSubmittedByWhoForCheck="@PurchasedById"
-                            EntriesForCheck="@Entries" InvoiceId="@InvoiceId" ReturnToFormSet="DisplayInvoice"></BettingForm4DCheck>
+        <BetFormDisabled></BetFormDisabled>
     }
-
 </AuthorizeView>
+
