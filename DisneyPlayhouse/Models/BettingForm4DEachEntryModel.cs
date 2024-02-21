@@ -14,6 +14,9 @@
         public double BigCostForEntry { get; set; }
         public double SmallCostForEntry { get; set; }
         public double TotalCostForEntry { get; set; }
+        public double ActualBigPerDrawDate { get; set; }
+        public int ActualSmallPerDrawDate { get; set; }
+        public double TotalCostForEntryPerDrawDate { get; set; }
         public bool isEntryValid { get; set; } = true;
     }
 }

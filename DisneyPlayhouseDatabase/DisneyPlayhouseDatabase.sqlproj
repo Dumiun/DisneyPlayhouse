@@ -82,5 +82,9 @@
     <Build Include="dbo\Stored Procedures\spDetailsOfSelectedInvoice.sql" />
     <Build Include="dbo\Stored Procedures\spGetNumberVariationForSelectedNumberInInvoice.sql" />
     <Build Include="dbo\Stored Procedures\spGetCurrentUserLevel1Invoices.sql" />
+    <Build Include="dbo\Stored Procedures\spGetDateRangeForCurrentUserPageReport.sql" />
+    <Build Include="dbo\Tables\4DInvoiceLevel1point5.sql" />
+    <Build Include="dbo\Stored Procedures\spInvoiceLevel1point5Entry_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\spGetPageRecordsForUserOnDrawDate.sql" />
   </ItemGroup>
 </Project>

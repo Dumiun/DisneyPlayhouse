@@ -26,6 +26,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
         {
             try
             {
+                List<DateTime> uniqueDrawDates = new List<DateTime>();
                 for (int i = 0; i < EntriesForCheck.Count; i++)
                 {
                     if (EntriesForCheck[i].DrawDates != null)
@@ -49,7 +50,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                                     level4entry.DrawDate = drawdate;
                                     // Output the data
                                     //Console.WriteLine($"Level 4 Data ---- InvoiceId: {level4entry.InvoiceId}, Number: {level4entry.NumberVariation}, Big: {level4entry.Big}, Small: {level4entry.Small}, BigAmount: {level4entry.Big}, SmallAmount: {level4entry.Small}, DrawDate: {level4entry.DrawDate}");
-                                    invoiceData.CreateInvoiceLevel4Entry(level4entry);
+                                    await invoiceData.CreateInvoiceLevel4Entry(level4entry);
                                 }
                             }
                             // Check if any of the required values are empty or zero
@@ -65,8 +66,10 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                                 level3entry.DrawDate = drawdate;
                                 // Output the data for Level 3 entry
                                 //Console.WriteLine($"Level 3 Entry - InvoiceId: {level3entry.InvoiceId}, Number: {level3entry.Number}, Big: {level3entry.Big}, Small: {level3entry.Small}, Roll: {level3entry.Roll}, DrawDate: {level3entry.DrawDate}");
-                                invoiceData.CreateInvoiceLevel3Entry(level3entry);
+                                await invoiceData.CreateInvoiceLevel3Entry(level3entry);
                             }
+
+                            uniqueDrawDates.Add(drawdate);
                         }
                         if (!string.IsNullOrEmpty(EntriesForCheck[i].Number))
                         {
@@ -85,7 +88,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                             level2entry.TotalCostForEntry = EntriesForCheck[i].TotalCostForEntry;
                             // Output the data for Level 2 entry
                             //Console.WriteLine($"Level 2 Entry - InvoiceId: {level2entry.InvoiceId}, Number: {level2entry.Number}, Big: {level2entry.Big}, Small: {level2entry.Small}, Roll: {level2entry.Roll}, BigAmount: {level2entry.ActualBig}, SmallAmount: {level2entry.ActualSmall}, TotalAmount: {level2entry.TotalCostForEntry}, DrawDates: {string.Join(", ", level2entry.DrawDates)}");
-                            invoiceData.CreateInvoiceLevel2Entry(level2entry);
+                            await invoiceData.CreateInvoiceLevel2Entry(level2entry);
                         }
                     }
                 }
@@ -105,7 +108,41 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
 
                 // Output the data for Level 1 entry
                 //Console.WriteLine($"Level 1 Entry - InvoiceId: {level1entry.InvoiceId}, TotalBig: {level1entry.TotalBig}, TotalSmall: {level1entry.TotalSmall}, TotalAmount: {level1entry.TotalAmount}, StrikeAmount: {level1entry.StrikeAmount}, WhoseId: {level1entry.PurchasedForId},Media: {level1entry.MediaType}, EnteredBy: {level1entry.PurchasedById}, CreatedDate: {level1entry.PurchasedDate}, UpdatedOn: {level1entry.LastUpdatedOn}");
-                invoiceData.CreateInvoiceLevel1Entry(level1entry);
+                await invoiceData.CreateInvoiceLevel1Entry(level1entry);
+
+                //filter the unique draw dates so that all the entries in the List is distinct
+                uniqueDrawDates = uniqueDrawDates.Distinct().ToList();
+
+                foreach (var drawDates in uniqueDrawDates)
+                {
+                    Lib_InvoiceLevel1point5DataModel level15entry = new Lib_InvoiceLevel1point5DataModel();
+
+                    level15entry.DrawDate = drawDates;
+                    level15entry.InvoiceId = InvoiceId;
+                    level15entry.PageName = InvoicePageNameForCheck;
+
+                    foreach (var i in EntriesForCheck)
+                    {
+                        if (i.DrawDates != null)
+                        {
+                            // if i.DrawDates contains the drawDates, then add the TotalBig and TotalSmall to the level15entry. Only compare the Date NOT the Time
+                            if (i.DrawDates.Contains(drawDates.Date))
+                            {
+                                level15entry.TotalBig += i.ActualBigPerDrawDate;
+                                level15entry.TotalSmall += i.ActualSmallPerDrawDate;
+                                level15entry.TotalAmount += i.TotalCostForEntryPerDrawDate;
+                            }
+                        }
+                    }
+
+                    level15entry.StrikeAmount = 0.00;
+                    level15entry.PurchasedForId = InvoiceForWhoForCheck;
+                    level15entry.PurchasedById = InvoiceSubmittedByWhoForCheck;
+                    level15entry.PurchasedDate = DateTime.Now;
+                    level15entry.LastUpdatedOn = DateTime.Now;
+
+                    await invoiceData.CreateInvoiceLevel1_5Entry(level15entry);
+                }
             }
             catch (Exception ex)
             {

@@ -2,8 +2,6 @@
 @using DisneyPlayhouseLibrary.Data
 @using DisneyPlayhouseLibrary.Models
 
-@inject IReportData reportData
-
 <div class="alert alert-secondary" role="alert">
     <div class="row">
         <div class="col-md-10">
@@ -73,7 +71,7 @@
     private ILib_ReportHistoryModel reportHistoryModel = new ReportHistoryModel();
     [CascadingParameter]
     public Task<AuthenticationState> AuthStateTask { get; set; }
-    private List<PageReportRowForChildModel> pageReportRowForChildModel = new List<PageReportRowForChildModel>();
+    [Parameter] public EventCallback<ValueTuple<string, DateTime, DateTime>> OnSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,20 +83,6 @@
     //async task for submit button
     private async Task HandlePageReportSubmit()
     {
-        List<List<Lib_InvoiceLevel1DataModel>> invoiceLevel1DataModels = new List<List<Lib_InvoiceLevel1DataModel>>();
-        List<PageReportRowForChildModel> TotalForEachChild = new List<PageReportRowForChildModel>();
-
-        invoiceLevel1DataModels = await reportData.GetNumberVariationsOfSelectedNumberInInvoice(reportHistoryModel);
-
-        foreach(var item in invoiceLevel1DataModels)
-        {
-            PageReportRowForChildModel pageReportRowForChildModel = new PageReportRowForChildModel();
-            pageReportRowForChildModel.MemberId = item[0].PurchasedForId;
-            pageReportRowForChildModel.TotalBig = item.Sum (x => x.TotalBig);
-            pageReportRowForChildModel.TotalSmall = item.Sum(x => x.TotalSmall);
-            pageReportRowForChildModel.TotalAmount = item.Sum(x => x.TotalAmount);
-            pageReportRowForChildModel.StrikeAmount = item.Sum (x => x.StrikeAmount);
-            TotalForEachChild.Add(pageReportRowForChildModel);
-        }
+        await OnSubmit.InvokeAsync((reportHistoryModel.ReportForId, reportHistoryModel.FromDate, reportHistoryModel.ToDate));
     }
 }

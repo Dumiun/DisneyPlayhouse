@@ -1,11 +1,18 @@
-﻿@page "/Report4D"
+﻿@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Data
+@using DisneyPlayhouseLibrary.Models
+
+@inject IReportData reportData 
+@inject IMemberData memberData
+
+@page "/Report4D"
 
 <PageTitle>Report 4D</PageTitle>
 
 @attribute [Authorize(Roles = "Member")]
 
 <AuthorizeView>
-    <Report4DSelectArea></Report4DSelectArea>
+    <Report4DSelectArea OnSubmit="HandleReportSubmit"></Report4DSelectArea>
 
     <div class="container">
         <div class="table-responsive">
@@ -26,43 +33,27 @@
                     </tr>
                 </thead>
                 <tbody style="text-align:center;" class="table-light">
-                    @if (false)
+                    @if (pageReportRecords.Count > 0)
                     {
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                3
-                            </td>
-                            <td>
-                                4
-                            </td>
-                            <td>
-                                5
-                            </td>
-                            <td>
-                                6
-                            </td>
-                            <td>
-                                7
-                            </td>
-                            <td>
-                                8
-                            </td>
-                            <td>
-                                9
-                            </td>
-                            <td>
-                                10
-                            </td>
-                              <td>
-                                11
-                            </td>
-                        </tr>
+                        @foreach(var pageReport in pageReportRecords)
+                        {
+                            @foreach(var record in pageReport)
+                            {
+                                <tr>
+                                    <td>@record.DrawDate.ToLongDateString()</td>
+                                    <td>@record.MemberId</td>
+                                    <td>Role</td>
+                                    <td>Currency</td>
+                                    <td>@record.TotalBig</td>
+                                    <td>@record.TotalSmall</td>
+                                    <td>Comms %</td>
+                                    <td>$@record.TotalAmount</td>
+                                    <td>Actual</td>
+                                    <td>@record.TotalStrikeAmount</td>
+                                    <td>$@(record.TotalAmount - record.TotalStrikeAmount)</td>
+                                </tr>
+                            }
+                        }
                     }
                     else
                     {
@@ -79,5 +70,51 @@
 
 </AuthorizeView>
 @code {
+    private List<List<Lib_PageReportRecords>> pageReportRecords = new List<List<Lib_PageReportRecords>>();
 
+    private async Task HandleReportSubmit((string reportForId, DateTime fromDate, DateTime toDate) submittedValue)
+    {
+        pageReportRecords = new List<List<Lib_PageReportRecords>>();
+        ILib_ReportHistoryModel currentUserHistory = new Lib_ReportHistoryModel();
+        List<Lib_PageReportRecords> UserPageReportRecords = new List<Lib_PageReportRecords>();
+
+         var dateRangeForCurrentUser = await reportData.GetDateRangeForCurrentUserPageReport(submittedValue.reportForId, submittedValue.fromDate, submittedValue.toDate);
+
+        foreach(var dateRange in dateRangeForCurrentUser)
+        {
+            Lib_PageReportRecords tempRecord = new Lib_PageReportRecords();
+            tempRecord.Invoices = await reportData.GetPageRecordsForUserOnDrawDate(submittedValue.reportForId, dateRange.DrawDate.Date);
+            tempRecord.DrawDate = dateRange.DrawDate.Date;
+            tempRecord.MemberId = submittedValue.reportForId;
+            tempRecord.TotalBig = tempRecord.Invoices.Sum(x => x.TotalBig);
+            tempRecord.TotalSmall = tempRecord.Invoices.Sum(x => x.TotalSmall);
+            tempRecord.TotalAmount = tempRecord.Invoices.Sum(x => x.TotalAmount);
+            tempRecord.TotalStrikeAmount = tempRecord.Invoices.Sum(x => x.StrikeAmount);
+            UserPageReportRecords.Add(tempRecord);
+        }
+        pageReportRecords.Add(UserPageReportRecords);
+
+        // get childid of current user
+        var childId = await memberData.GetListOfChildId(submittedValue.reportForId);
+
+        foreach(var child in childId)
+        {
+            List<Lib_PageReportRecords> ChildPageReportRecords = new List<Lib_PageReportRecords>();
+            var dateRangeForChild = await reportData.GetDateRangeForCurrentUserPageReport(child.ChildId , submittedValue.fromDate, submittedValue.toDate);
+
+            foreach(var dateRange in dateRangeForChild)
+            {
+                Lib_PageReportRecords tempChildRecord = new Lib_PageReportRecords();
+                tempChildRecord.Invoices = await reportData.GetPageRecordsForUserOnDrawDate(child.ChildId, dateRange.DrawDate.Date);
+                tempChildRecord.DrawDate = dateRange.DrawDate.Date;
+                tempChildRecord.MemberId = child.ChildId;
+                tempChildRecord.TotalBig = tempChildRecord.Invoices.Sum(x => x.TotalBig);
+                tempChildRecord.TotalSmall = tempChildRecord.Invoices.Sum(x => x.TotalSmall);
+                tempChildRecord.TotalAmount = tempChildRecord.Invoices.Sum(x => x.TotalAmount);
+                tempChildRecord.TotalStrikeAmount = tempChildRecord.Invoices.Sum(x => x.StrikeAmount);
+                ChildPageReportRecords.Add(tempChildRecord);
+            }
+            pageReportRecords.Add(ChildPageReportRecords);
+        }
+    }
 }

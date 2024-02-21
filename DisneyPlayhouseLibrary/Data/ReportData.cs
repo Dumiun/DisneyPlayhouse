@@ -18,14 +18,14 @@ namespace DisneyPlayhouseLibrary.Data
             _dataAccess = dataAccess;
         }
 
-        public async Task<List<List<Lib_InvoiceLevel1DataModel>>> GetNumberVariationsOfSelectedNumberInInvoice(ILib_ReportHistoryModel searchDetails)
+        public async Task<List<List<Lib_InvoiceLevel1DataModel>>> GetNumberVariationsOfSelectedNumberInInvoice(string reportForId, DateTime fromDate, DateTime toDate)
         {
             // Get List of child of current user
             List<List<Lib_InvoiceLevel1DataModel>> listOfChildInvoices = new List<List<Lib_InvoiceLevel1DataModel>>();
-            var childList = await _dataAccess.LoadData<Lib_ListOfChildIdModel, dynamic>("dbo.spChildId_Search", new { ParentId = searchDetails.ReportForId }, "DefaultConnection");
+            var childList = await _dataAccess.LoadData<Lib_ListOfChildIdModel, dynamic>("dbo.spChildId_Search", new { ParentId = reportForId }, "DefaultConnection");
 
             // Add current user's invoices to the list
-            var invoicesOfCurrentUser = await _dataAccess.LoadData<Lib_InvoiceLevel1DataModel, dynamic>("dbo.spGetCurrentUserLevel1Invoices", new { PurchasedForId = searchDetails.ReportForId, FromDate = searchDetails.FromDate, ToDate = searchDetails.ToDate }, "DefaultConnection");
+            var invoicesOfCurrentUser = await _dataAccess.LoadData<Lib_InvoiceLevel1DataModel, dynamic>("dbo.spGetCurrentUserLevel1Invoices", new { PurchasedForId = reportForId, FromDate = fromDate, ToDate = toDate }, "DefaultConnection");
             Console.WriteLine("OK");
             listOfChildInvoices.Add(invoicesOfCurrentUser);
 
@@ -35,12 +35,26 @@ namespace DisneyPlayhouseLibrary.Data
             {
                 foreach (var child in childList)
                 {
-                    var invoicesOfChild = await _dataAccess.LoadData<Lib_InvoiceLevel1DataModel, dynamic>("dbo.spGetChildLevel1Invoices", new { PurchasedForId = child.ChildId, FromDate = searchDetails.FromDate, ToDate = searchDetails.ToDate }, "DefaultConnection");
+                    var invoicesOfChild = await _dataAccess.LoadData<Lib_InvoiceLevel1DataModel, dynamic>("dbo.spGetChildLevel1Invoices", new { PurchasedForId = child.ChildId, FromDate = fromDate, ToDate = toDate }, "DefaultConnection");
                     listOfChildInvoices.Add(invoicesOfChild);
                 }
             }
 
             return listOfChildInvoices;
+        }
+
+        public async Task<List<Lib_DateRangeModel>> GetDateRangeForCurrentUserPageReport(string reportForId, DateTime fromDate, DateTime toDate)
+        {
+            var dateRange = await _dataAccess.LoadData<Lib_DateRangeModel, dynamic>("dbo.spGetDateRangeForCurrentUserPageReport", new { PurchasedForId = reportForId, FromDate = fromDate, ToDate = toDate }, "DefaultConnection");
+
+            return dateRange;
+        }
+
+        public async Task<List<Lib_InvoiceLevel1point5DataModel>> GetPageRecordsForUserOnDrawDate(string reportForId, DateTime drawDate)
+        {
+            var invoices = await _dataAccess.LoadData<Lib_InvoiceLevel1point5DataModel, dynamic>("dbo.spGetPageRecordsForUserOnDrawDate", new { PurchasedForId = reportForId, DrawDate = drawDate }, "DefaultConnection");
+
+            return invoices;
         }
     }
 }

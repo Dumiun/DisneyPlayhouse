@@ -77,10 +77,22 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 if (Entries[updatedValue.Index].Number.Length == 4 && Entries[updatedValue.Index].Day != 0)
                 {
                     Entries[updatedValue.Index].ActualBig = (Entries[updatedValue.Index].Big * Entries[updatedValue.Index].NumberVariations.Count) * Entries[updatedValue.Index].DrawDates.Count;
+                    Entries[updatedValue.Index].ActualBigPerDrawDate = (Entries[updatedValue.Index].Big * Entries[updatedValue.Index].NumberVariations.Count);
                     Entries[updatedValue.Index].ActualSmall = (Entries[updatedValue.Index].Small * Entries[updatedValue.Index].NumberVariations.Count) * Entries[updatedValue.Index].DrawDates.Count;
-                    Entries[updatedValue.Index].BigCostForEntry = BigSmallCost.BigCost * Entries[updatedValue.Index].ActualBig;
-                    Entries[updatedValue.Index].SmallCostForEntry = BigSmallCost.SmallCost * Entries[updatedValue.Index].ActualSmall;
-                    Entries[updatedValue.Index].TotalCostForEntry = Entries[updatedValue.Index].BigCostForEntry + Entries[updatedValue.Index].SmallCostForEntry;
+                    Entries[updatedValue.Index].ActualSmallPerDrawDate = (Entries[updatedValue.Index].Small * Entries[updatedValue.Index].NumberVariations.Count);
+                    if (Entries[updatedValue.Index].Roll != "I")
+                    {
+                        Entries[updatedValue.Index].BigCostForEntry = BigSmallCost.BigCost * Entries[updatedValue.Index].ActualBig;
+                        Entries[updatedValue.Index].SmallCostForEntry = BigSmallCost.SmallCost * Entries[updatedValue.Index].ActualSmall;
+                        Entries[updatedValue.Index].TotalCostForEntry = Entries[updatedValue.Index].BigCostForEntry + Entries[updatedValue.Index].SmallCostForEntry;
+                        Entries[updatedValue.Index].TotalCostForEntryPerDrawDate = BigSmallCost.BigCost * Entries[updatedValue.Index].ActualBigPerDrawDate + BigSmallCost.SmallCost * Entries[updatedValue.Index].ActualSmallPerDrawDate;
+                    }
+                    else
+                    {
+                        Entries[updatedValue.Index].BigCostForEntry = 0;
+                        Entries[updatedValue.Index].SmallCostForEntry = 0;
+                        Entries[updatedValue.Index].TotalCostForEntry = 0;
+                    }
                 }
             }
 
