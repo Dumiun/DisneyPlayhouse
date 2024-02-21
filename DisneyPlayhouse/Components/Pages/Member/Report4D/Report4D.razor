@@ -13,47 +13,94 @@
 
 <AuthorizeView>
     <Report4DSelectArea OnSubmit="HandleReportSubmit"></Report4DSelectArea>
-
     <div class="container">
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr style="text-align:center;" class="table-dark text-center">
                         <th scope="col">Draw Date</th>
-                        <th scope="col">Member ID</th>
-                        <th scope="col">Role</th>
-                        <th scope="col">Currency</th>
                         <th scope="col">Big</th>
                         <th scope="col">Small</th>
-                        <th scope="col">Comms %</th>
                         <th scope="col">Ticket Amt</th>
-                        <th scope="col">Actual Amt</th>
                         <th scope="col">Strike Amt</th>
                         <th scope="col">Balance</th>
                     </tr>
                 </thead>
                 <tbody style="text-align:center;" class="table-light">
-                    @if (pageReportRecords.Count > 0)
+                    @if (masterView.Count > 0)
                     {
-                        @foreach(var pageReport in pageReportRecords)
+                        @foreach (var view in masterView)
                         {
-                            @foreach(var record in pageReport)
-                            {
                                 <tr>
-                                    <td>@record.DrawDate.ToLongDateString()</td>
-                                    <td>@record.MemberId</td>
-                                    <td>Role</td>
-                                    <td>Currency</td>
-                                    <td>@record.TotalBig</td>
-                                    <td>@record.TotalSmall</td>
-                                    <td>Comms %</td>
-                                    <td>$@record.TotalAmount</td>
-                                    <td>Actual</td>
-                                    <td>@record.TotalStrikeAmount</td>
-                                    <td>$@(record.TotalAmount - record.TotalStrikeAmount)</td>
+                                    <td>@view.DrawDate.ToLongDateString()</td>
+                                    <td>@view.TotalBig</td>
+                                    <td>@view.TotalSmall</td>
+                                <td>$@view.TotalAmount.ToString("F2")</td>
+                                <td>$@view.TotalStrike.ToString("F2")</td>
+                                <td>$@view.Balance.ToString("F2")</td>
                                 </tr>
-                            }
+                            
                         }
+                        <tr class="fw-bolder text-success bg-warning">
+                            <td>Grand Total :</td>
+                            <td>@masterView.Sum(view => view.TotalBig)</td>
+                            <td>@masterView.Sum(view => view.TotalSmall)</td>
+                            <td>$@masterView.Sum(view => view.TotalAmount).ToString("F2")</td>
+                            <td>$@masterView.Sum(view => view.TotalStrike).ToString("F2")</td>
+                            <td>$@masterView.Sum(view => view.Balance).ToString("F2")</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th scope="col" colspan="12">
+                                No Data To Show
+                            </th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr style="text-align:center;" class="table-dark text-center">
+                        <th scope="col">Member ID</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Big</th>
+                        <th scope="col">Small</th>
+                        <th scope="col">Ticket Amt</th>
+                        <th scope="col">Strike Amt</th>
+                        <th scope="col">Balance</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align:center;" class="table-light">
+                    @if (childView.Count > 0)
+                    {
+                        @foreach(var view in childView)
+                        {
+                                <tr>
+                                    <td>@view.MemberId</td>
+                                    <td>@view.Role</td>
+                                    <td>@view.TotalBig</td>
+                                    <td>@view.TotalSmall</td>
+                                <td>$@view.TotalAmount.ToString("F2")</td>
+                                <td>$@view.StrikeAmount.ToString("F2")</td>
+                                <td>$@view.Balance.ToString("F2")</td>
+                                </tr>
+                        }
+                        <tr class="fw-bolder text-success bg-warning">
+                            <td colspan="2">Grand Total :</td>
+                            <td>@childView.Sum(view => view.TotalBig)</td>
+                            <td>@childView.Sum(view => view.TotalSmall)</td>
+                            <td>$@childView.Sum(view => view.TotalAmount).ToString("F2")</td>
+                            <td>$@childView.Sum(view => view.StrikeAmount).ToString("F2")</td>
+                            <td>$@childView.Sum(view => view.Balance).ToString("F2")</td>
+                        </tr>
                     }
                     else
                     {
@@ -71,6 +118,10 @@
 </AuthorizeView>
 @code {
     private List<List<Lib_PageReportRecords>> pageReportRecords = new List<List<Lib_PageReportRecords>>();
+    private List<DateTime> listOfDrawDates = new List<DateTime>();
+    private List<string> listOfChildIds = new List<string>();
+    List<PageReportTotalViewModel> masterView = new List<PageReportTotalViewModel>();
+    List<PageReportChildTotalViewModel> childView = new List<PageReportChildTotalViewModel>();
 
     private async Task HandleReportSubmit((string reportForId, DateTime fromDate, DateTime toDate) submittedValue)
     {
@@ -78,7 +129,7 @@
         ILib_ReportHistoryModel currentUserHistory = new Lib_ReportHistoryModel();
         List<Lib_PageReportRecords> UserPageReportRecords = new List<Lib_PageReportRecords>();
 
-         var dateRangeForCurrentUser = await reportData.GetDateRangeForCurrentUserPageReport(submittedValue.reportForId, submittedValue.fromDate, submittedValue.toDate);
+        var dateRangeForCurrentUser = await reportData.GetDateRangeForCurrentUserPageReport(submittedValue.reportForId, submittedValue.fromDate, submittedValue.toDate);
 
         foreach(var dateRange in dateRangeForCurrentUser)
         {
@@ -91,11 +142,17 @@
             tempRecord.TotalAmount = tempRecord.Invoices.Sum(x => x.TotalAmount);
             tempRecord.TotalStrikeAmount = tempRecord.Invoices.Sum(x => x.StrikeAmount);
             UserPageReportRecords.Add(tempRecord);
+            listOfDrawDates.Add(dateRange.DrawDate);
         }
         pageReportRecords.Add(UserPageReportRecords);
 
         // get childid of current user
         var childId = await memberData.GetListOfChildId(submittedValue.reportForId);
+        listOfChildIds.Add(submittedValue.reportForId);
+        foreach(var child in childId)
+        {
+            listOfChildIds.Add(child.ChildId);
+        }
 
         foreach(var child in childId)
         {
@@ -113,8 +170,35 @@
                 tempChildRecord.TotalAmount = tempChildRecord.Invoices.Sum(x => x.TotalAmount);
                 tempChildRecord.TotalStrikeAmount = tempChildRecord.Invoices.Sum(x => x.StrikeAmount);
                 ChildPageReportRecords.Add(tempChildRecord);
+                listOfDrawDates.Add(dateRange.DrawDate);
             }
             pageReportRecords.Add(ChildPageReportRecords);
+        }
+
+        var distinctDates = listOfDrawDates.Select(date => date.Date).Distinct().ToList();
+
+        foreach(var dates in distinctDates)
+        {
+            PageReportTotalViewModel tempView = new PageReportTotalViewModel();
+            tempView.DrawDate = dates;
+            tempView.TotalBig = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalBig));
+            tempView.TotalSmall = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalSmall));
+            tempView.TotalAmount = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalAmount));
+            tempView.TotalStrike = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalStrikeAmount));
+            tempView.Balance = tempView.TotalAmount - tempView.TotalStrike;
+            masterView.Add(tempView);
+        }
+
+        foreach(var child in listOfChildIds)
+        {
+            PageReportChildTotalViewModel tempChildView = new PageReportChildTotalViewModel();
+            tempChildView.MemberId = child;
+            tempChildView.TotalBig = pageReportRecords.Sum(x => x.Where(y => y.MemberId == child).Sum(z => z.TotalBig));
+            tempChildView.TotalSmall = pageReportRecords.Sum(x => x.Where(y => y.MemberId == child).Sum(z => z.TotalSmall));
+            tempChildView.TotalAmount = pageReportRecords.Sum(x => x.Where(y => y.MemberId == child).Sum(z => z.TotalAmount));
+            tempChildView.StrikeAmount= pageReportRecords.Sum(x => x.Where(y => y.MemberId == child).Sum(z => z.TotalStrikeAmount));
+            tempChildView.Balance = tempChildView.TotalAmount - tempChildView.StrikeAmount;
+            childView.Add(tempChildView);
         }
     }
 }
