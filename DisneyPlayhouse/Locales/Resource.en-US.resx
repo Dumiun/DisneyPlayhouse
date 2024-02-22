@@ -138,6 +138,9 @@
   <data name="BetHistory4D" xml:space="preserve">
     <value>Bet History for 4D</value>
   </data>
+  <data name="BettingForm4D" xml:space="preserve">
+    <value>4D Betting Form</value>
+  </data>
   <data name="Big" xml:space="preserve">
     <value>Big</value>
   </data>
@@ -240,6 +243,9 @@
   <data name="ManageAccountHeader" xml:space="preserve">
     <value>Manage your Account</value>
   </data>
+  <data name="ManageMember" xml:space="preserve">
+    <value>Manage Member</value>
+  </data>
   <data name="Media" xml:space="preserve">
     <value>Media Type</value>
   </data>
@@ -272,6 +278,9 @@
   </data>
   <data name="PageNameIs" xml:space="preserve">
     <value>Page Name :</value>
+  </data>
+  <data name="PageReportPage" xml:space="preserve">
+    <value>Page Report</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>

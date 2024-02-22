@@ -138,6 +138,9 @@
   <data name="BetHistory4D" xml:space="preserve">
     <value>4D 投注历史记录</value>
   </data>
+  <data name="BettingForm4D" xml:space="preserve">
+    <value>4D 投注表格</value>
+  </data>
   <data name="Big" xml:space="preserve">
     <value>大</value>
   </data>
@@ -240,6 +243,9 @@
   <data name="ManageAccountHeader" xml:space="preserve">
     <value>管理您的帐户</value>
   </data>
+  <data name="ManageMember" xml:space="preserve">
+    <value>管理会员</value>
+  </data>
   <data name="Media" xml:space="preserve">
     <value>媒体类型</value>
   </data>
@@ -272,6 +278,9 @@
   </data>
   <data name="PageNameIs" xml:space="preserve">
     <value>页面名称</value>
+  </data>
+  <data name="PageReportPage" xml:space="preserve">
+    <value>页面报告</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>密码</value>

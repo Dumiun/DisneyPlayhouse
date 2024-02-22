@@ -4,10 +4,11 @@
 
 @inject IReportData reportData 
 @inject IMemberData memberData
+@inject IStringLocalizer<Resource> localizer
 
 @page "/Report4D"
 
-<PageTitle>Report 4D</PageTitle>
+<PageTitle>@localizer["PageReportPage"]</PageTitle>
 
 @attribute [Authorize(Roles = "Member")]
 

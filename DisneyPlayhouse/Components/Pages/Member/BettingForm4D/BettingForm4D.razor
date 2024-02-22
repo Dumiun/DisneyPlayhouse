@@ -1,7 +1,8 @@
 ﻿@page "/BettingForm4D"
 @using DisneyPlayhouse.Models
 @inject NavigationManager NavigationManager
-<PageTitle>Betting Form 4D</PageTitle>
+@inject IStringLocalizer<Resource> localizer
+<PageTitle>@localizer["BettingForm4D"]</PageTitle>
 
 @attribute [Authorize(Roles = "Member")]
 
