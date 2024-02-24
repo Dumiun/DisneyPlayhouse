@@ -1,5 +1,204 @@
-﻿<h3>AddNewMember</h3>
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using DisneyPlayhouse.Components.Account
+@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using DisneyPlayhouse.Data
+@using DisneyPlayhouseLibrary.Data
 
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject IMemberData memberData
+
+@attribute [Authorize(Roles = "Member")]
+
+<AuthorizeView Context="authContext">
+    <div class="container mb-3">
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnSubmit="RegisterUser" FormName="register">
+            <ValidationSummary class="text-danger" role="alert" />
+            <DataAnnotationsValidator />
+<div class="row">
+    <div class="col-md-4">
+            <h2>1. Select Parent ID</h2>
+            <hr />
+                @if (names != null && names.Any())
+                {
+                    <div class="form-floating mb-3">
+                        <InputSelect @bind-Value="@Input.AssignedParentLoginId" class="form-select">
+                            <option value="@currentUserId">@currentUserId</option>
+                            @if (names != null && names.Count > 0)
+                            {
+                                @foreach (var name in names)
+                                {
+                                    <option value="@name.ChildId">@name.ChildId</option>
+                                }
+                            }
+                        </InputSelect>
+                            <label for="parentId">Select Parent ID</label>
+                    </div>
+                }
+    </div>
+                @if(Input.AssignedParentLoginId != "" && Input.AssignedParentLoginId != null)
+                {
+                    <div class="col-md-4">
+                        <h2>2. Enter Details</h2>
+                        <hr />
+                        <div class="form-floating mb-3">
+                            <InputText @bind-Value="Input.LoginId" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter Login ID" />
+                            <label for="email">Login ID</label>
+                            <ValidationMessage For="() => Input.LoginId" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label for="password">Password</label>
+                            <ValidationMessage For="() => Input.Password" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label for="confirm-password">Confirm Password</label>
+                            <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <InputSelect @bind-Value="Input.CurrencyType" class="form-select">
+                                <option value="SGD">SGD</option>
+                                <option value="USD">USD</option>
+                            </InputSelect>
+                            <label for="select-role">Select Currency</label>
+                            <ValidationMessage For="() => Input.CurrencyType" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <InputSelect @bind-Value="Input.Role" class="form-select">
+                                <option value="Member">Member</option>
+                            </InputSelect>
+                            <label for="select-role">Select Role</label>
+                            <ValidationMessage For="() => Input.Role" class="text-danger" />
+                        </div>
+                        <div class="form-check mb-3">
+                            <label class="form-check-label" for="chkAutoCredit">Auto Credit</label>
+                            <InputCheckbox id="chkAutoCredit" class="form-check-input" type="checkbox" @bind-Value="Input.isAutoCredit" />
+                        </div>
+                    </div>
+                @if (Input.LoginId != null && Input.LoginId != "" && Input.Password != null && Input.Password !=""
+                && Input.ConfirmPassword == Input.Password && Input.CurrencyType != "" && Input.Role != "")
+                {
+                    <div class="col-md-4">
+                        <h2>3. Check before Submit</h2>
+                        <hr />
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    </div>
+                }
+                }
+</div>
+        </EditForm>
+</div>
+</AuthorizeView>
 @code {
+    private IEnumerable<IdentityError>? identityErrors;
+    private ILib_MemberDetailsModel newMemberDetails = new MemberDetailsModel();
+    private List<ILib_ListOfParentIdModel> parents = new List<ILib_ListOfParentIdModel>();
 
+    private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
+    private string? currentUserId = "";
+
+    [Parameter] public EventCallback RefreshComponent { get; set; }
+
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthStateTask.Result.User.Identity.Name;
+        names = await memberData.GetListOfChildId(currentUserId);
+    }
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = CreateUser();
+
+        await UserStore.SetUserNameAsync(user, Input.LoginId, CancellationToken.None);
+        user.CurrencyType = Input.CurrencyType;
+        //var emailStore = GetEmailStore();
+        //await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        var result = await UserManager.CreateAsync(user, Input.Password);
+
+        if (!result.Succeeded)
+        {
+            identityErrors = result.Errors;
+            return;
+        }
+        await UserManager.AddToRoleAsync(user, Input.Role);
+
+        newMemberDetails.LoginId = Input.LoginId;
+        newMemberDetails.ParentLoginId = Input.AssignedParentLoginId;
+        newMemberDetails.AutoCredit = Input.isAutoCredit;
+        newMemberDetails.CreatedDate = DateTime.Now;
+        newMemberDetails.LatestLoggedInDate = DateTime.Now;
+
+
+        await memberData.CreateNewMemberDetails(newMemberDetails);
+        await memberData.CreateNewMemberRelationship(newMemberDetails);
+
+        await RefreshComponent.InvokeAsync();
+    }
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Login ID")]
+        public string LoginId { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Currency Type")]
+        public string CurrencyType { get; set; } = "";
+
+        public bool isAutoCredit { get; set; } = false;
+        public string AssignedParentLoginId { get; set; } = "";
+    }
 }

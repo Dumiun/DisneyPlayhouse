@@ -1,5 +1,6 @@
 ﻿@page "/ManageMember"
 @inject IStringLocalizer<Resource> localizer
+@inject NavigationManager NavigationManager
 
 <PageTitle>@localizer["ManageMember"]</PageTitle>
 
@@ -9,7 +10,7 @@
     <ManageMemberSelectOptionsArea OnSubmitAddNewMember="HandleAddNewMember" OnSubmitModifyMember="HandleModifyMember" OnSubmitViewMembers="HandleViewAllMember"></ManageMemberSelectOptionsArea>
     @if(options == 1)
     {
-        <AddNewMember></AddNewMember>
+        <AddNewMember RefreshComponent="HandleRefreshComponent"></AddNewMember>
     }
     @if(options == 2)
     {
@@ -38,5 +39,10 @@
     private async Task HandleModifyMember()
     {
         options = 3;
+    }
+
+    private async Task HandleRefreshComponent()
+    {
+        NavigationManager.NavigateTo("/ManageMember", true);
     }
 }
