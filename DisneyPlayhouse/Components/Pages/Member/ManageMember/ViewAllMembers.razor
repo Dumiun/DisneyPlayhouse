@@ -1,5 +1,76 @@
-﻿<h3>ViewAllMembers</h3>
+﻿@using DisneyPlayhouse.Data
+@using DisneyPlayhouse.Models
+@using DisneyPlayhouseLibrary.Data
+@using DisneyPlayhouseLibrary.Models
+@using Microsoft.AspNetCore.Identity
+@inject IMemberData memberData
+@inject UserManager<ApplicationUser> UserManager
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+<table class="table table-bordered text-sm-center">
+    <thead style="background-color:steelblue; color:white; ">
+        <tr>
+            <th colspan="2">Member ID</th>
+            <th>Role</th>
+            <th>Phone No.</th>
+            <th>Ticket %</th>
+            <th>Credit</th>
+            <th>Currency</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    
+    <tbody style="font-size:medium;" class="table-light">
+        @foreach(var member in memberChilds){
+                        <tr>
+                            <td colspan="8" style="text-align:initial; background-color:seagreen; color:white; font-weight:bolder;">Member Tree of user : <span class="btn btn-light btn-sm fw-bold">@member.MemberId</span></td>
+                        </tr>
+                    <ViewAllMembersView memberChilds="member" AddMemberHandler="HandleAddMember"></ViewAllMembersView>
+        }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
 
 @code {
+    private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
+    private string? currentUserId = "";
+    [CascadingParameter] public Task<AuthenticationState> AuthStateTask { get; set; }
+    private List<ILib_ManageMemberViewChildModel> memberChilds = new List<ILib_ManageMemberViewChildModel>();
+    [Parameter] public EventCallback<string> AddMemberHandlerForUser { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthStateTask.Result.User.Identity.Name;
+        names = await memberData.GetListOfDirectChildId(currentUserId);
+
+
+        foreach(var name in names)
+        {
+            Lib_ManageMemberViewChildModel childData = new Lib_ManageMemberViewChildModel();
+            childData.MemberParentId = currentUserId;
+            childData.MemberId = name.ChildId;
+            var user = await UserManager.FindByNameAsync(name.ChildId);
+            var userRole = await UserManager.GetRolesAsync(user);
+            childData.Role = userRole[0];
+            childData.HandPhoneNo = user.PhoneNumber;
+            childData.CommsPercentage = 10;
+            childData.CreditAmount = 30000;
+            childData.CurrencyType = user.CurrencyType;
+            memberChilds.Add(childData);
+        }
+    }
+    
+    private async Task HandleAddMember(string userId)
+    {
+        await AddMemberHandlerForUser.InvokeAsync(userId);
+    }
+
 
 }

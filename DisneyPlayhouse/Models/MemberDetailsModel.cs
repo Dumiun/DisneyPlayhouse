@@ -9,5 +9,9 @@ namespace DisneyPlayhouse.Models
         public bool? AutoCredit { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LatestLoggedInDate { get; set; }
+
+        public double Credit { get; set; }
+        public string PhoneNumber { get; set; }
+        public double TicketComms { get; set; }
     }
 }

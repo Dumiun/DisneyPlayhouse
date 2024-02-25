@@ -87,5 +87,9 @@
     <Build Include="dbo\Stored Procedures\spInvoiceLevel1point5Entry_Insert.sql" />
     <Build Include="dbo\Stored Procedures\spGetPageRecordsForUserOnDrawDate.sql" />
     <Build Include="dbo\Tables\CommissionSettings.sql" />
+    <Build Include="dbo\Stored Procedures\spDirectChildId_Search.sql" />
+    <Build Include="dbo\Tables\Member_Credit.sql" />
+    <Build Include="dbo\Stored Procedures\spMemberCredit_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\spMemberTicketComms_Insert.sql" />
   </ItemGroup>
 </Project>
