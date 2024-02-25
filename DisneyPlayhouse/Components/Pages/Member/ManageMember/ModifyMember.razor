@@ -1,13 +1,22 @@
-﻿@using System.ComponentModel.DataAnnotations
+﻿@using DisneyPlayhouse.Components.Account
 @using DisneyPlayhouseLibrary.Data
 @using DisneyPlayhouseLibrary.Models
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Identity
+@using DisneyPlayhouse.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+@inject NavigationManager NavigationManager
 
 @inject IMemberData memberData
 
 
 <div class="container mt-2">
     <div class="alert alert-light">
-        <EditForm Model="@MemberSetting">
+        <EditForm Model="@MemberSetting" OnSubmit="HandleModifyProfile">
             <ValidationSummary></ValidationSummary>
             <div class="row">
                 <div class="col-md-4">
@@ -16,7 +25,7 @@
                     @if (names != null && names.Any())
                     {
                         <div class="form-floating mb-3">
-                            <InputSelect @bind-Value="@MemberSetting.LoginId" class="form-select">
+                            <InputSelect @bind-Value="@MemberSetting.LoginId" class="form-select" @oninput="HandleSelectedUser">
                                 <option value="@currentUserId">@currentUserId</option>
                                 @if (names != null && names.Count > 0)
                                 {
@@ -130,7 +139,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-primary btn-lg mt-2" type="button">Submit Changes</button>
+                                    <button class="btn btn-primary btn-lg mt-2" type="submit">Submit Changes</button>
                                 </div>
                             </div>
                         </div>
@@ -145,6 +154,14 @@
     private InputModel MemberSetting = new InputModel();
     private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
     private string? currentUserId = "";
+    private string? username;
+    private string? phoneNumber;
+    private string? currencyType;
+    private double userTicketComms;
+    private double userCredit;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
 
     [CascadingParameter]
     public Task<AuthenticationState> AuthStateTask { get; set; }
@@ -155,6 +172,54 @@
         names = await memberData.GetListOfChildId(currentUserId);
     }
 
+    private async Task HandleSelectedUser(ChangeEventArgs e)
+    {
+        string selecteduser = e.Value.ToString();
+        var user = await UserManager.FindByNameAsync(selecteduser);
+        phoneNumber = await UserManager.GetPhoneNumberAsync(user);
+        currencyType = user.CurrencyType;
+
+        MemberSetting.PhoneNumber ??= phoneNumber;
+        MemberSetting.CurrencyType ??= currencyType;
+
+        userTicketComms = await memberData.GetTicketCommsOfUser(selecteduser);
+        userCredit = await memberData.GetCreditOfUser(selecteduser);
+        string currentUrl = NavigationManager.Uri;
+        NavigationManager.NavigateTo(currentUrl);
+    }
+
+    private async Task HandleModifyProfile()
+    {
+        var user = await UserManager.FindByNameAsync(MemberSetting.LoginId);
+
+        if(MemberSetting.Password != null && MemberSetting.Password != "" && MemberSetting.Password == MemberSetting.ConfirmPassword)
+        {
+            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
+            var result = await UserManager.ResetPasswordAsync(user, token, MemberSetting.Password);
+        }
+
+        if(MemberSetting.CurrencyType != currencyType)
+        {
+            user.CurrencyType = MemberSetting.CurrencyType;
+            var UpdateResult = await UserManager.UpdateAsync(user);
+        }
+
+        if(MemberSetting.TicketComms != userTicketComms)
+        {
+            await memberData.UpdatedMemberTicketComms(MemberSetting.LoginId, MemberSetting.TicketComms);
+        }
+
+        if(MemberSetting.Credit != userCredit)
+        {
+            await memberData.UpdatedMemberCredit(MemberSetting.LoginId, MemberSetting.Credit);   
+        }
+
+        if(MemberSetting.PhoneNumber != phoneNumber)
+        {
+            user.PhoneNumber = MemberSetting.PhoneNumber;
+            var UpdateResult = await UserManager.UpdateAsync(user);
+        }
+    }
 
     private sealed class InputModel
     {

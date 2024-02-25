@@ -78,5 +78,43 @@ namespace DisneyPlayhouseLibrary.Data
             var childList = await _dataAccess.LoadData<Lib_ListOfChildIdModel, dynamic>("dbo.spDirectChildId_Search", new { ParentId = currentUserId }, "DefaultConnection");
             return childList.ToList<ILib_ListOfChildIdModel>();
         }
+
+        public async Task<double> GetTicketCommsOfUser(string userId)
+        {
+            var commsValue = await _dataAccess.LoadData<double, dynamic>("dbo.spMemberTicketComms_Search", new { MemberId = userId }, "DefaultConnection");
+
+            return commsValue.FirstOrDefault();
+        }
+
+        public async Task<double> GetCreditOfUser(string userId)
+        {
+            var creditValue = await _dataAccess.LoadData<double, dynamic>("dbo.spMemberCredit_Search", new { MemberId = userId }, "DefaultConnection");
+
+            return creditValue.FirstOrDefault();
+        }
+
+        public async Task UpdatedMemberCredit(string user, double newValue)
+        {
+            var newUpdate = new
+            {
+                MemberId = user,
+                CreditAllowed = newValue,
+                LastUpdatedOn = DateTime.Now
+            };
+
+            await _dataAccess.SaveData("dbo.spMemberCredit_Update", newUpdate, "DefaultConnection");
+        }
+
+        public async Task UpdatedMemberTicketComms(string user, double newValue)
+        {
+            var newUpdate = new
+            {
+                MemberId = user,
+                CommsPercentage = newValue,
+                LastUpdatedOn = DateTime.Now
+            };
+
+            await _dataAccess.SaveData("dbo.spMemberTicketComms_Update", newUpdate, "DefaultConnection");
+        }
     }
 }
