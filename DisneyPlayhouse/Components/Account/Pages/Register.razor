@@ -72,7 +72,10 @@
             </div>
             <div class="form-floating mb-3">
                 <InputSelect @bind-Value="Input.Role" class="form-select">
-                    <option value="Member">Member</option>
+                    <option value="Player">Player</option>
+                                        <option value="Senior">Senior</option>
+                                                            <option value="Master">Master</option>
+                        <option value="Agent">Agent</option>
                 </InputSelect>
                 <label for="select-role">Select Role</label>
                 <ValidationMessage For="() => Input.Role" class="text-danger" />
