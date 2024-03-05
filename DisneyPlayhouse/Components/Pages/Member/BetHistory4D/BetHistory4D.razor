@@ -6,7 +6,7 @@
 @inject IStringLocalizer<Resource> localizer
 <PageTitle>@localizer["BetHistory4D"]</PageTitle>
 
-@attribute [Authorize(Roles = "Member")]
+@attribute [Authorize(Roles = "Player,Agent,Master,Senior")]
 
 <style>
     .accordion-button:not(.collapsed) {

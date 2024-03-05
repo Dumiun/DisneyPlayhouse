@@ -10,7 +10,7 @@
 
 <PageTitle>@localizer["PageReportPage"]</PageTitle>
 
-@attribute [Authorize(Roles = "Member")]
+@attribute [Authorize(Roles = "Player,Master,Agent,Senior")]
 
 <AuthorizeView>
     <Report4DSelectArea OnSubmit="HandleReportSubmit"></Report4DSelectArea>
