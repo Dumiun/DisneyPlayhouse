@@ -17,11 +17,9 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IMemberData memberData
 
-@attribute [Authorize(Roles = "Member")]
 
-<AuthorizeView Context="authContext">
     <div class="container mb-3">
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnSubmit="RegisterUser" FormName="register">
+    <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnSubmit="RegisterUser" FormName="register" Context="registerContext">
             <ValidationSummary class="text-danger" role="alert" />
             <DataAnnotationsValidator />
 <div class="row">
@@ -29,13 +27,13 @@
             <h2>1. Select Parent ID</h2>
             <hr />
                     <div class="form-floating mb-3">
-                        <InputSelect @bind-Value="@Input.AssignedParentLoginId" class="form-select">
-                            <option value="@currentUserId">@currentUserId</option>
+                        <InputSelect @bind-Value="@Input.AssignedParentLoginId" class="form-control">
+                        <option value="@currentUserId" style="color:saddlebrown; font-size:large; font-weight:bold">@currentUserId</option>
                             @if (names != null && names.Count > 0)
                             {
                                 @foreach (var name in names)
                                 {
-                                    <option value="@name.ChildId">@name.ChildId</option>
+                                <option value="@name.ChildId" style="color:saddlebrown; font-size:large; font-weight:bold">@name.ChildId</option>
                                 }
                             }
                         </InputSelect>
@@ -71,20 +69,43 @@
                             <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
                         </div>
                         <div class="form-floating mb-3">
-                            <InputSelect @bind-Value="Input.CurrencyType" class="form-select">
-                                <option value="SGD">SGD</option>
-                                <option value="USD">USD</option>
+                            <InputSelect @bind-Value="Input.CurrencyType" class="form-control">
+                            <option value="SGD" style="color:seagreen; font-size:large; font-weight:bold">SGD - Singapore Dollars</option>
+                            <option value="USD" style="color:darkslateblue; font-size:large; font-weight:bold">USD - United State Dollars</option>
                             </InputSelect>
                             <label for="select-role">Select Currency</label>
                             <ValidationMessage For="() => Input.CurrencyType" class="text-danger" />
                         </div>
+                            <AuthorizeView roles="Player,Agent">
                         <div class="form-floating mb-3">
                             <InputSelect @bind-Value="Input.Role" class="form-select">
-                                <option value="Member">Member</option>
+                                <option value="Player">Player</option>
                             </InputSelect>
                             <label for="select-role">Select Role</label>
                             <ValidationMessage For="() => Input.Role" class="text-danger" />
                         </div>
+                                </AuthorizeView>
+                    <AuthorizeView roles="Master">
+                        <div class="form-floating mb-3">
+                            <InputSelect @bind-Value="Input.Role" class="form-select">
+                                <option value="Player">Player</option>
+                                <option value="Agent">Agent</option>
+                            </InputSelect>
+                            <label for="select-role">Select Role</label>
+                            <ValidationMessage For="() => Input.Role" class="text-danger" />
+                        </div>
+                    </AuthorizeView>
+                    <AuthorizeView roles="Senior">
+                        <div class="form-floating mb-3">
+                            <InputSelect @bind-Value="Input.Role" class="form-select">
+                                <option value="Player">Player</option>
+                                <option value="Agent">Agent</option>
+                                <option value="Master">Master</option>
+                            </InputSelect>
+                            <label for="select-role">Select Role</label>
+                            <ValidationMessage For="() => Input.Role" class="text-danger" />
+                        </div>
+                    </AuthorizeView>
                         <div class="form-check mb-3">
                             <label class="form-check-label" for="chkAutoCredit">Auto Credit</label>
                             <InputCheckbox id="chkAutoCredit" class="form-check-input" type="checkbox" @bind-Value="Input.isAutoCredit" />
@@ -148,7 +169,7 @@
 </div>
         </EditForm>
 </div>
-</AuthorizeView>
+
 @code {
     private IEnumerable<IdentityError>? identityErrors;
     private ILib_MemberDetailsModel newMemberDetails = new MemberDetailsModel();
