@@ -28,12 +28,12 @@
             <hr />
                     <div class="form-floating mb-3">
                         <InputSelect @bind-Value="@Input.AssignedParentLoginId" class="form-control">
-                        <option value="@currentUserId" style="color:saddlebrown; font-size:large; font-weight:bold">@currentUserId</option>
+                        <option value="@currentUserId" style="color:black; font-size:large; font-weight:bold">@currentUserId - @currentUserRole</option>
                             @if (names != null && names.Count > 0)
                             {
-                                @foreach (var name in names)
+                                @for(int i = 0; i < names.Count; i++)
                                 {
-                                <option value="@name.ChildId" style="color:saddlebrown; font-size:large; font-weight:bold">@name.ChildId</option>
+                                    <option value="@names[i].ChildId" style="color:saddlebrown; font-size:large; font-weight:bold">@names[i].ChildId - @RolesForDisplay[i]</option>
                                 }
                             }
                         </InputSelect>
@@ -176,7 +176,9 @@
     private List<ILib_ListOfParentIdModel> parents = new List<ILib_ListOfParentIdModel>();
 
     private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
+    private List<string> RolesForDisplay = new List<string>();
     private string? currentUserId = "";
+    private string? currentUserRole = "";
     [Parameter] public string NewMemberForUser {get; set;} = "";
 
     [Parameter] public EventCallback RefreshComponent { get; set; }
@@ -197,6 +199,17 @@
     {
         currentUserId = AuthStateTask.Result.User.Identity.Name;
         names = await memberData.GetListOfChildId(currentUserId);
+        var mainuser = await UserManager.FindByNameAsync(currentUserId);
+        var mainuserRole = await UserManager.GetRolesAsync(mainuser);
+        currentUserRole = mainuserRole[0];
+
+        foreach(var name in names)
+        {
+            var user = await UserManager.FindByNameAsync(name.ChildId);
+            var userRole = await UserManager.GetRolesAsync(user);
+            RolesForDisplay.Add(userRole[0]);
+        }
+
         if(NewMemberForUser != "")
         {
             Input.AssignedParentLoginId = NewMemberForUser;
