@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage"
+﻿@page "/Account/Manage/ChangeBetSettings"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
@@ -8,24 +8,28 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
+@inject ILogger<ChangePassword> Logger
 @inject IStringLocalizer<Resource> localizer
 
-<PageTitle>@localizer["Profile"]</PageTitle>
-<StatusMessage />
+<PageTitle>@localizer["ChangeBetSettings"]</PageTitle>
 
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+
+            <label class="alert">@localizer["SelectedCurrency"] @currencyType</label>
             <div class="form-floating mb-3">
-                <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                    <label for="username" class="form-label">@localizer["Username"]</label>
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
-                <label for="phone-number" class="form-label">@localizer["PhoneNumber"]</label>
-                <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+                <InputSelect @bind-Value="Input.CurrencyType" class="form-control">
+                    <option value="USD">@localizer["SelectCurrency"]</option>
+                    <option value="USD">USD($1:$1)</option>
+                    <option value="SGD">SGD($:$0.75)</option>
+                </InputSelect>
+                <label for="currency-type" class="form-label">@localizer["Currency"]</label>
+                <ValidationMessage For="() => Input.CurrencyType" class="text-danger" />
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">@localizer["Save"]</button>
         </EditForm>
@@ -34,8 +38,7 @@
 
 @code {
     private ApplicationUser user = default!;
-    private string? username;
-    private string? phoneNumber;
+    private string? currencyType;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -46,15 +49,14 @@
     protected override async Task OnInitializedAsync()
     {
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
-        username = await UserManager.GetUserNameAsync(user);
-        phoneNumber = await UserManager.GetPhoneNumberAsync(user);
+        currencyType = user.CurrencyType;
 
-        Input.PhoneNumber ??= phoneNumber;
+        Input.CurrencyType ??= currencyType;
     }
 
     private async Task OnValidSubmitAsync()
     {
-        user.PhoneNumber = Input.PhoneNumber;
+        user.CurrencyType = Input.CurrencyType;
 
         var UpdateResult = await UserManager.UpdateAsync(user);
 
@@ -70,8 +72,8 @@
     private sealed class InputModel
     {
         [Required]
-        [Phone]
-        [Display(Name = "Phone number")]
-        public string? PhoneNumber { get; set; }
+        [Display(Name = "Currency Type")]
+        [RegularExpression("^(USD|SGD)$", ErrorMessage = "Currency type should be either USD or SGD")]
+        public string? CurrencyType { get; set; }
     }
 }
