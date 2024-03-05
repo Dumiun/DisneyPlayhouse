@@ -7,19 +7,26 @@
 @attribute [Authorize(Roles = "Member")]
 
 <AuthorizeView>
-    <ManageMemberSelectOptionsArea OnSubmitAddNewMember="HandleAddNewMember" OnSubmitModifyMember="HandleModifyMember" OnSubmitViewMembers="HandleViewAllMember"></ManageMemberSelectOptionsArea>
-    @if(options == 1)
-    {
-        <AddNewMember RefreshComponent="HandleRefreshComponent" NewMemberForUser="@newUserFor"></AddNewMember>
-    }
-    @if(options == 2)
-    {
-        <ViewAllMembers AddMemberHandlerForUser="SwitchToAddMemberView"></ViewAllMembers>
-    }
-    @if(options == 3)
-    {
-        <ModifyMember></ModifyMember>
-    }
+    <div class="row">
+        <div class="col-md-2">
+            <MemberNamesDisplayArea></MemberNamesDisplayArea>
+        </div>
+        <div class="col-md-10">
+            <ManageMemberSelectOptionsArea OnSubmitAddNewMember="HandleAddNewMember" OnSubmitModifyMember="HandleModifyMember" OnSubmitViewMembers="HandleViewAllMember"></ManageMemberSelectOptionsArea>
+            @if (options == 1)
+            {
+                <AddNewMember RefreshComponent="HandleRefreshComponent" NewMemberForUser="@newUserFor"></AddNewMember>
+            }
+            @if (options == 2)
+            {
+                <ViewAllMembers AddMemberHandlerForUser="SwitchToAddMemberView"></ViewAllMembers>
+            }
+            @if (options == 3)
+            {
+                <ModifyMember></ModifyMember>
+            }
+        </div>
+    </div>
 </AuthorizeView>
 
 
