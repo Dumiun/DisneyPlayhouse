@@ -2,8 +2,17 @@
 
 <a class="btn btn-primary btn-md m-3" href="Account/Manage">
     <strong>@currentUser</strong>
-    <AuthorizeView roles="Member">
-        <span class="badge bg-success ms-2">@localizer["Member"]</span>
+    <AuthorizeView roles="Player">
+        <span class="badge bg-success ms-2">@localizer["Player"]</span>
+    </AuthorizeView>
+    <AuthorizeView roles="Agent">
+        <span class="badge bg-success ms-2">@localizer["Agent"]</span>
+    </AuthorizeView>
+    <AuthorizeView roles="Senior">
+        <span class="badge bg-success ms-2">@localizer["Senior"]</span>
+    </AuthorizeView>
+    <AuthorizeView roles="Master">
+        <span class="badge bg-success ms-2">@localizer["Master"]</span>
     </AuthorizeView>
     <AuthorizeView roles="Admin">
         <span class="badge bg-success ms-2">@localizer["Admin"]</span>
