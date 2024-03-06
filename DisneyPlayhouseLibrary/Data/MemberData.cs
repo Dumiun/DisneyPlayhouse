@@ -116,5 +116,12 @@ namespace DisneyPlayhouseLibrary.Data
 
             await _dataAccess.SaveData("dbo.spMemberTicketComms_Update", newUpdate, "DefaultConnection");
         }
+
+        public async Task<Lib_AccountCreditModel> GetCreditDataOfUser(string userId)
+        {
+            var creditData = await _dataAccess.LoadData<Lib_AccountCreditModel, dynamic>("dbo.spMemberCreditData_Search", new { MemberId = userId }, "DefaultConnection");
+
+            return creditData.FirstOrDefault();
+        }
     }
 }

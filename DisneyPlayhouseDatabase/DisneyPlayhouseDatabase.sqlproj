@@ -95,5 +95,6 @@
     <Build Include="dbo\Stored Procedures\spMemberTicketComms_Update.sql" />
     <Build Include="dbo\Stored Procedures\spMemberTicketComms_Search.sql" />
     <Build Include="dbo\Stored Procedures\spMemberCredit_Search.sql" />
+    <Build Include="dbo\Stored Procedures\spMemberCreditData_Search.sql" />
   </ItemGroup>
 </Project>

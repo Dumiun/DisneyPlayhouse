@@ -1,0 +1,56 @@
+﻿@page "/Account/Manage/PersonalData"
+
+@using System.ComponentModel.DataAnnotations
+@using DisneyPlayhouseLibrary.Data
+@using Microsoft.AspNetCore.Identity
+@using DisneyPlayhouse.Data
+@using DisneyPlayhouseLibrary.Models
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+@inject ILogger<ChangePassword> Logger
+@inject IStringLocalizer<Resource> localizer
+@inject IMemberData memberData
+
+<PageTitle>@localizer["PersonalData"]</PageTitle>
+
+    <div class="row">
+        <div class="col-md">
+            <label class="h5">
+                @localizer["Commision"] :
+        </label>$Commision Value
+    </div>
+</div>
+<hr />
+
+    <div class="row">
+        <div class="col-md">
+            <label class="h5">
+                @localizer["AllowedCredit"] :
+            </label>$@credit.CreditAllowed
+            <br />
+            <label class="h5">
+                @localizer["UsedCredit"] :
+            </label>$@credit.UsedCredit
+            <br />
+            <label class="h5">
+                @localizer["RemainingCredit"] :
+            </label>$@credit.RemainingCredit
+    </div>
+</div>
+@code {
+    private ApplicationUser user = default!;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private Lib_AccountCreditModel credit = new Lib_AccountCreditModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        credit = await memberData.GetCreditDataOfUser(user.UserName);
+    }
+}
