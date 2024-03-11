@@ -1,0 +1,36 @@
+﻿@using DisneyPlayhouse.Models
+@if (childView.Count > 0)
+{
+    @foreach (var view in childView)
+    {
+        <tr>
+            <td>@view.MemberId</td>
+            <td>@view.Role</td>
+            <td>@view.TotalBig</td>
+            <td>@view.TotalSmall</td>
+            <td>$@view.TotalAmount.ToString("F2")</td>
+            <td>$@view.StrikeAmount.ToString("F2")</td>
+            <td>$@view.Balance.ToString("F2")</td>
+        </tr>
+    }
+    <tr class="fw-bolder text-success bg-warning">
+        <td colspan="2">Grand Total :</td>
+        <td>@childView.Sum(view => view.TotalBig)</td>
+        <td>@childView.Sum(view => view.TotalSmall)</td>
+        <td>$@childView.Sum(view => view.TotalAmount).ToString("F2")</td>
+        <td>$@childView.Sum(view => view.StrikeAmount).ToString("F2")</td>
+        <td>$@childView.Sum(view => view.Balance).ToString("F2")</td>
+    </tr>
+}
+else
+{
+    <tr>
+        <th scope="col" colspan="12">
+            No Data To Show
+        </th>
+    </tr>
+}
+
+@code{
+    [Parameter] public List<PageReportChildTotalViewModel> childView {get; set;}= new List<PageReportChildTotalViewModel>();
+}

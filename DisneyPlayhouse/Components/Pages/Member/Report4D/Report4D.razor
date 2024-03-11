@@ -19,6 +19,8 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr style="text-align:center;" class="table-dark text-center">
+                        <th scope="col">Member ID</th>
+                        <th scope="col">Day</th>
                         <th scope="col">Draw Date</th>
                         <th scope="col">Big</th>
                         <th scope="col">Small</th>
@@ -28,37 +30,7 @@
                     </tr>
                 </thead>
                 <tbody style="text-align:center;" class="table-light">
-                    @if (masterView.Count > 0)
-                    {
-                        @foreach (var view in masterView)
-                        {
-                                <tr>
-                                    <td>@view.DrawDate.ToLongDateString()</td>
-                                    <td>@view.TotalBig</td>
-                                    <td>@view.TotalSmall</td>
-                                <td>$@view.TotalAmount.ToString("F2")</td>
-                                <td>$@view.TotalStrike.ToString("F2")</td>
-                                <td>$@view.Balance.ToString("F2")</td>
-                                </tr>
-                            
-                        }
-                        <tr class="fw-bolder text-success bg-warning">
-                            <td>Grand Total :</td>
-                            <td>@masterView.Sum(view => view.TotalBig)</td>
-                            <td>@masterView.Sum(view => view.TotalSmall)</td>
-                            <td>$@masterView.Sum(view => view.TotalAmount).ToString("F2")</td>
-                            <td>$@masterView.Sum(view => view.TotalStrike).ToString("F2")</td>
-                            <td>$@masterView.Sum(view => view.Balance).ToString("F2")</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <th scope="col" colspan="12">
-                                No Data To Show
-                            </th>
-                        </tr>
-                    }
+                    <Report4DParentDetails masterView="masterView"></Report4DParentDetails>
                 </tbody>
             </table>
         </div>
@@ -80,37 +52,7 @@
                     </tr>
                 </thead>
                 <tbody style="text-align:center;" class="table-light">
-                    @if (childView.Count > 0)
-                    {
-                        @foreach(var view in childView)
-                        {
-                                <tr>
-                                    <td>@view.MemberId</td>
-                                    <td>@view.Role</td>
-                                    <td>@view.TotalBig</td>
-                                    <td>@view.TotalSmall</td>
-                                <td>$@view.TotalAmount.ToString("F2")</td>
-                                <td>$@view.StrikeAmount.ToString("F2")</td>
-                                <td>$@view.Balance.ToString("F2")</td>
-                                </tr>
-                        }
-                        <tr class="fw-bolder text-success bg-warning">
-                            <td colspan="2">Grand Total :</td>
-                            <td>@childView.Sum(view => view.TotalBig)</td>
-                            <td>@childView.Sum(view => view.TotalSmall)</td>
-                            <td>$@childView.Sum(view => view.TotalAmount).ToString("F2")</td>
-                            <td>$@childView.Sum(view => view.StrikeAmount).ToString("F2")</td>
-                            <td>$@childView.Sum(view => view.Balance).ToString("F2")</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <th scope="col" colspan="12">
-                                No Data To Show
-                            </th>
-                        </tr>
-                    }
+                    <Report4DChildDetails childView="childView"></Report4DChildDetails>
                 </tbody>
             </table>
         </div>
@@ -123,6 +65,14 @@
     private List<string> listOfChildIds = new List<string>();
     List<PageReportTotalViewModel> masterView = new List<PageReportTotalViewModel>();
     List<PageReportChildTotalViewModel> childView = new List<PageReportChildTotalViewModel>();
+    private string reportForId;
+    [CascadingParameter] public Task<AuthenticationState> AuthStateTask { get; set; }
+
+    //Intialized async
+    protected override async Task OnInitializedAsync()
+    {
+        reportForId = AuthStateTask.Result.User.Identity.Name;
+    }
 
     private async Task HandleReportSubmit((string reportForId, DateTime fromDate, DateTime toDate) submittedValue)
     {
@@ -183,6 +133,7 @@
         foreach(var dates in distinctDates)
         {
             PageReportTotalViewModel tempView = new PageReportTotalViewModel();
+            tempView.ReportFor = reportForId;
             tempView.DrawDate = dates;
             tempView.TotalBig = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalBig));
             tempView.TotalSmall = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalSmall));
