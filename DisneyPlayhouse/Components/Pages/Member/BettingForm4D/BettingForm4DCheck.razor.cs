@@ -1,4 +1,5 @@
 using DisneyPlayhouse.Models;
+using DisneyPlayhouseLibrary.Data;
 using DisneyPlayhouseLibrary.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -98,6 +99,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                 level1entry.TotalBig = TotalBigForCheck;
                 level1entry.TotalSmall = TotalSmallForCheck;
                 level1entry.TotalAmount = TotalCostForCheck;
+                level1entry.CommsPercentage = await memberData.GetCommissionOfUser(InvoiceForWhoForCheck);
                 level1entry.StrikeAmount = 0.00;
                 level1entry.PurchasedForId = InvoiceForWhoForCheck;
                 level1entry.PurchasedById = InvoiceSubmittedByWhoForCheck;
@@ -134,7 +136,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
                             }
                         }
                     }
-
+                    level15entry.CommsPercentage = await memberData.GetCommissionOfUser(InvoiceForWhoForCheck);
                     level15entry.StrikeAmount = 0.00;
                     level15entry.PurchasedForId = InvoiceForWhoForCheck;
                     level15entry.PurchasedById = InvoiceSubmittedByWhoForCheck;

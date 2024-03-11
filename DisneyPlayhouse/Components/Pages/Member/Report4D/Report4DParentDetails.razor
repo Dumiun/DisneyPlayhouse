@@ -10,6 +10,7 @@
             <td>@view.DrawDate.ToShortDateString()</td>
             <td>@view.TotalBig</td>
             <td>@view.TotalSmall</td>
+            <td>@view.Comms.ToString("F2")%</td>
             <td>$@view.TotalAmount.ToString("F2")</td>
             <td>$@view.TotalStrike.ToString("F2")</td>
             <td>$@view.Balance.ToString("F2")</td>
@@ -20,6 +21,7 @@
         <td colspan="3">Grand Total :</td>
         <td>@masterView.Sum(view => view.TotalBig)</td>
         <td>@masterView.Sum(view => view.TotalSmall)</td>
+        <td>@masterView[0].Comms.ToString("F2")%</td>
         <td>$@masterView.Sum(view => view.TotalAmount).ToString("F2")</td>
         <td>$@masterView.Sum(view => view.TotalStrike).ToString("F2")</td>
         <td>$@masterView.Sum(view => view.Balance).ToString("F2")</td>
@@ -35,5 +37,5 @@ else
 }
 
 @code{
-    [Parameter] public List<PageReportTotalViewModel> masterView {get; set;}= new List<PageReportTotalViewModel>();
+    [Parameter] public List<PageReportTotalViewModel> masterView {get; set;} = new List<PageReportTotalViewModel>();
 }

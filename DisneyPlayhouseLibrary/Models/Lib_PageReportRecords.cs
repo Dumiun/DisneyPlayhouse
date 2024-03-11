@@ -11,6 +11,7 @@ namespace DisneyPlayhouseLibrary.Models
         public string MemberId { get; set; }
         public DateTime DrawDate { get; set; }
         public List<Lib_InvoiceLevel1point5DataModel> Invoices { get; set; }
+        public double CommsAmt { get; set; }
         public double TotalBig { get; set; }
         public int TotalSmall { get; set; }
         public double TotalAmount { get; set; }

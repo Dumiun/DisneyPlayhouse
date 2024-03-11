@@ -6,6 +6,7 @@
     [DrawDate] DATETIME2 NOT NULL,
     [TotalBig] DECIMAL(10, 2) NOT NULL, 
     [TotalSmall] INT NOT NULL, 
+    [CommsPercentage] DECIMAL(10, 2) NOT NULL,
     [TotalAmount] DECIMAL(13, 3) NOT NULL, 
     [StrikeAmount] DECIMAL(13, 3) NOT NULL, 
     [PurchasedById] NVARCHAR(20) NOT NULL, 

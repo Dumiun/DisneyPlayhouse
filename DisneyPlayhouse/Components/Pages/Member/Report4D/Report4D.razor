@@ -20,10 +20,11 @@
                 <thead>
                     <tr style="text-align:center;" class="table-dark text-center">
                         <th scope="col">Member ID</th>
-                        <th scope="col">Day</th>
+                        <th scope="col">Draw Day</th>
                         <th scope="col">Draw Date</th>
                         <th scope="col">Big</th>
                         <th scope="col">Small</th>
+                        <th scope="col">Comms %</th>
                         <th scope="col">Ticket Amt</th>
                         <th scope="col">Strike Amt</th>
                         <th scope="col">Balance</th>
@@ -65,17 +66,20 @@
     private List<string> listOfChildIds = new List<string>();
     List<PageReportTotalViewModel> masterView = new List<PageReportTotalViewModel>();
     List<PageReportChildTotalViewModel> childView = new List<PageReportChildTotalViewModel>();
-    private string reportForId;
+    private string? reportForId;
+    private double commsForReportForId;
     [CascadingParameter] public Task<AuthenticationState> AuthStateTask { get; set; }
 
     //Intialized async
     protected override async Task OnInitializedAsync()
     {
         reportForId = AuthStateTask.Result.User.Identity.Name;
+        commsForReportForId = await memberData.GetCommissionOfUser(reportForId);
     }
 
     private async Task HandleReportSubmit((string reportForId, DateTime fromDate, DateTime toDate) submittedValue)
     {
+        masterView.Clear();
         childView.Clear();
         listOfChildIds.Clear();
         pageReportRecords = new List<List<Lib_PageReportRecords>>();
@@ -134,10 +138,11 @@
         {
             PageReportTotalViewModel tempView = new PageReportTotalViewModel();
             tempView.ReportFor = reportForId;
+            tempView.Comms = await memberData.GetTicketCommsOfUser(reportForId);
             tempView.DrawDate = dates;
             tempView.TotalBig = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalBig));
             tempView.TotalSmall = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalSmall));
-            tempView.TotalAmount = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalAmount));
+            tempView.TotalAmount = (pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalAmount))) * ((100 - tempView.Comms)/100);
             tempView.TotalStrike = pageReportRecords.Sum(x => x.Where(y => y.DrawDate == dates).Sum(z => z.TotalStrikeAmount));
             tempView.Balance = tempView.TotalAmount - tempView.TotalStrike;
             masterView.Add(tempView);

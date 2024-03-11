@@ -13,6 +13,7 @@ namespace DisneyPlayhouseLibrary.Models
         public DateTime DrawDate { get; set; }
         public double TotalBig { get; set; }
         public int TotalSmall { get; set; }
+        public double CommsPercentage { get; set; }
         public double TotalAmount { get; set; }
         public double StrikeAmount { get; set; }
         public string PurchasedById { get; set; }

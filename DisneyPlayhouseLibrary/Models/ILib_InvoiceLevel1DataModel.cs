@@ -1,5 +1,4 @@
-﻿
-namespace DisneyPlayhouseLibrary.Models
+﻿namespace DisneyPlayhouseLibrary.Models
 {
     public interface ILib_InvoiceLevel1DataModel
     {
@@ -7,6 +6,7 @@ namespace DisneyPlayhouseLibrary.Models
         DateTime LastUpdatedOn { get; set; }
         string MediaType { get; set; }
         string PageName { get; set; }
+        double CommsPercentage { get; set; }
         string PurchasedById { get; set; }
         DateTime PurchasedDate { get; set; }
         string PurchasedForId { get; set; }

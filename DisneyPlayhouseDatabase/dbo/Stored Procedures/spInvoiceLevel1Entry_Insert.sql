@@ -3,6 +3,7 @@
     @PageName NVARCHAR(50), 
     @TotalBig DECIMAL(10, 2), 
     @TotalSmall INT, 
+    @CommsPercentage DECIMAL(10, 2),
     @TotalAmount DECIMAL(13, 3), 
     @StrikeAmount DECIMAL(13, 3), 
     @PurchasedById NVARCHAR(20), 
@@ -14,6 +15,6 @@ AS
 BEGIN
 SET NOCOUNT ON;
 
-INSERT into [dbo].[4DInvoiceLevel1] (InvoiceId, PageName, TotalBig, TotalSmall, TotalAmount, StrikeAmount, PurchasedById, PurchasedForId, MediaType, PurchasedDate, LastUpdatedOn)
-VALUES (@InvoiceId, @PageName, @TotalBig, @TotalSmall, @TotalAmount, @StrikeAmount, @PurchasedById, @PurchasedForId, @MediaType, @PurchasedDate, @LastUpdatedOn)
+INSERT into [dbo].[4DInvoiceLevel1] (InvoiceId, PageName, TotalBig, TotalSmall, CommsPercentage, TotalAmount, StrikeAmount, PurchasedById, PurchasedForId, MediaType, PurchasedDate, LastUpdatedOn)
+VALUES (@InvoiceId, @PageName, @TotalBig, @TotalSmall, @CommsPercentage, @TotalAmount, @StrikeAmount, @PurchasedById, @PurchasedForId, @MediaType, @PurchasedDate, @LastUpdatedOn)
 END
