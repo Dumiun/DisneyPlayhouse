@@ -7,6 +7,7 @@ namespace DisneyPlayhouseLibrary.Data
         Task CreateNewMemberDetails(ILib_MemberDetailsModel info);
 
         Task CreateNewMemberRelationship(ILib_MemberDetailsModel info);
+        Task<double> GetCommissionOfUser(string userId);
         Task<Lib_AccountCreditModel> GetCreditDataOfUser(string userId);
         Task<double> GetCreditOfUser(string userId);
 

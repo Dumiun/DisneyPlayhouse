@@ -105,7 +105,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
 
         private async Task SubmitAllowed()
         {
-            if (InvoicePageName.Length >= 1 && InvoiceBelongsTo.Length > 1 && Entries[0].Number.Length == 4)
+            if (InvoicePageName.Length >= 1 && InvoiceBelongsTo.Length > 1 && Entries[0].Number.Length == 4 && (Entries[0].ActualBig > 0 || Entries[0].ActualSmall > 0))
             {
                 SubmitIsDisabled = false;
             }

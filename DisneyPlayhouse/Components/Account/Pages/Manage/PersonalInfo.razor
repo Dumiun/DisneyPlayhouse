@@ -20,7 +20,7 @@
         <div class="col-md">
             <label class="h5">
                 @localizer["Commision"] :
-        </label>$Commision Value
+        </label>@commissionAmt %
     </div>
 </div>
 <hr />
@@ -47,10 +47,13 @@
     private HttpContext HttpContext { get; set; } = default!;
 
     private Lib_AccountCreditModel credit = new Lib_AccountCreditModel();
+    private string? commissionAmt ="0.00";
 
     protected override async Task OnInitializedAsync()
     {
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         credit = await memberData.GetCreditDataOfUser(user.UserName);
+        var commissionAmtDouble = await memberData.GetCommissionOfUser(user.UserName);
+        commissionAmt = commissionAmtDouble.ToString("0.00");
     }
 }

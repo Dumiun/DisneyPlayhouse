@@ -123,5 +123,12 @@ namespace DisneyPlayhouseLibrary.Data
 
             return creditData.FirstOrDefault();
         }
+
+        public async Task<double> GetCommissionOfUser(string userId)
+        {
+            var commsData = await _dataAccess.LoadData<double, dynamic>("dbo.spMemberComms_Search", new { MemberId = userId }, "DefaultConnection");
+
+            return commsData.FirstOrDefault();
+        }
     }
 }
