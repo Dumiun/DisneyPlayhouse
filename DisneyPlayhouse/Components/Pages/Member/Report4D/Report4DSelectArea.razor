@@ -16,9 +16,9 @@
                         <InputDate @bind-Value="reportHistoryModel.ToDate" class="form-control"></InputDate>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-success d-flex justify-content-center align-items-center h-75 w-100 mt-3">
+                        <button type="submit" onclick="@(() => HandlePageReportSubmit())" class="btn btn-success d-flex justify-content-center align-items-center h-75 w-100 mt-3">
                             <i class="fa-solid fa-paper-plane" style="color: #ffffff;"></i>
-                            <span class="ms-2" @onclick="HandlePageReportSubmit">Submit Search</span>
+                            <span class="ms-2">Submit Search</span>
                         </button>
                     </div>
                     <div class="col-md-1">
