@@ -126,6 +126,7 @@
 
     private async Task HandleReportSubmit((string reportForId, DateTime fromDate, DateTime toDate) submittedValue)
     {
+        childView.Clear();
         pageReportRecords = new List<List<Lib_PageReportRecords>>();
         ILib_ReportHistoryModel currentUserHistory = new Lib_ReportHistoryModel();
         List<Lib_PageReportRecords> UserPageReportRecords = new List<Lib_PageReportRecords>();
@@ -192,6 +193,7 @@
 
         foreach(var child in listOfChildIds)
         {
+            childView.Clear();
             PageReportChildTotalViewModel tempChildView = new PageReportChildTotalViewModel();
             tempChildView.MemberId = child;
             tempChildView.TotalBig = pageReportRecords.Sum(x => x.Where(y => y.MemberId == child).Sum(z => z.TotalBig));
