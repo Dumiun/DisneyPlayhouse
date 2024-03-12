@@ -1,70 +1,94 @@
-﻿@using DisneyPlayhouse.Components.Account
-@using DisneyPlayhouseLibrary.Data
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using DisneyPlayhouse.Components.Account
+@using DisneyPlayhouse.Models
 @using DisneyPlayhouseLibrary.Models
-@using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
 @using DisneyPlayhouse.Data
+@using DisneyPlayhouseLibrary.Data
 
 @inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
-@inject IdentityUserAccessor UserAccessor
-@inject IdentityRedirectManager RedirectManager
+@inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
-
+@inject IdentityRedirectManager RedirectManager
 @inject IMemberData memberData
 
 
-<div class="container mt-2">
-    <div class="alert alert-light">
-        <EditForm Model="@MemberSetting" OnSubmit="HandleModifyProfile">
-            <ValidationSummary></ValidationSummary>
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>1. Select Member to Edit</h2>
-                    <hr />
-                    @if (names != null && names.Any())
-                    {
-                        <div class="form-floating mb-3">
-                            <InputSelect @bind-Value="@MemberSetting.LoginId" class="form-select" @oninput="HandleSelectedUser">
-                                <option value="@currentUserId">@currentUserId</option>
-                                @if (names != null && names.Count > 0)
-                                {
-                                    @foreach (var name in names)
-                                    {
-                                        <option value="@name.ChildId">@name.ChildId</option>
-                                    }
-                                }
-                            </InputSelect>
-                            <label for="parentId">Select Parent ID</label>
-                        </div>
-                    }
+
+<EditForm Model="MemberSetting" method="post" OnValidSubmit="HandleModifyProfile" FormName="modify">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-md-4">
+            <h2>1. Select Member ID</h2>
+            <hr />
+            @if (ModifyUser == "")
+            {
+                <div class="form-floating mb-3">
+                    <InputSelect @bind-Value="@MemberSetting.LoginId" @oninput="HandleSelectedUser" class="form-select">
+                        <option value="">Select Member ID</option>
+                        @if (names != null && names.Count > 0)
+                        {
+                            @foreach (var name in names)
+                            {
+                                <option value="@name.ChildId">@name.ChildId</option>
+                            }
+                        }
+                    </InputSelect>
+                    <label for="parentId">Select ID to Modify</label>
                 </div>
-                <div class="col-md-1">
-                    </div>
-                @if(MemberSetting.LoginId != null && MemberSetting.LoginId != "")
-                {
-                    <div class="col-md-7">
-                        <h2>2. Check Before Submit Changes</h2>
-                        <hr />
-                        <div class="row">
-                            <label class="col-form-label fw-bold">Change Password:</label>
-                            <div class="col-md">                        <div class="form-floating mb-3">
-                            <InputText type="password" @bind-Value="MemberSetting.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+            }
+            @if (ModifyUser != "" && ModifyUser != null)
+            {
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="@MemberSetting.LoginId" class="form-control" readonly />
+                    <label for="parentId">Member ID</label>
+                </div>
+            }
+        </div>
+        @if (MemberSetting.LoginId != "" && MemberSetting.LoginId != null)
+        {
+            <div class="col-md-7">
+                <h2>2. Modify Details</h2>
+                <hr />
+                <div class="alert alert-warning">All Fields cannot be empty</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <InputText type="password" @bind-Value="MemberSetting.Password" class="form-control" autocomplete="new-password" aria-required="true" />
                             <label for="password">Password</label>
                             <ValidationMessage For="() => MemberSetting.Password" class="text-danger" />
-                        </div></div>
-                        <div class="col-md">
-                                                    <div class="form-floating mb-3">
-                            <InputText type="password" @bind-Value="MemberSetting.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <InputText type="password" @bind-Value="MemberSetting.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
                             <label for="confirm-password">Confirm Password</label>
                             <ValidationMessage For="() => MemberSetting.ConfirmPassword" class="text-danger" />
                         </div>
-                        </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-form-label fw-bold">Change Account Currency:</label>
-                            <div class="col-md-6">
-                                                        <div class="form-floating mb-3">
+                    </div>
+                </div>
+
+                <div class="row mt-1 mb-4">
+                    <div class="col-md-12">
+                        <InputCheckbox type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" @bind-Value="MemberSetting.isAutoCredit" />
+                        @if (MemberSetting.isAutoCredit == true)
+                        {
+                            <label class="btn btn-outline-primary" for="btn-check-outlined">Click to Disable Auto Credit</label>
+                        }
+                        @if (MemberSetting.isAutoCredit == false)
+                        {
+                            <label class="btn btn-outline-primary" for="btn-check-outlined">Click to Enable Auto Credit</label>
+                        }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <InputSelect @bind-Value="MemberSetting.CurrencyType" class="form-select">
                                 <option value="SGD">SGD</option>
                                 <option value="USD">USD</option>
@@ -72,165 +96,143 @@
                             <label for="select-role">Select Currency</label>
                             <ValidationMessage For="() => MemberSetting.CurrencyType" class="text-danger" />
                         </div>
-                            </div>
-                        </div>
-                                                <div class="row">
-                            <label class="col-form-label fw-bold">Ticket Commission:</label>
-                            <div class="col-md-6">
-                                                        <div class="form-floating mb-3">
-                            <InputSelect @bind-Value="MemberSetting.TicketComms" class="form-select">
-                                <option value="0.0">0.0%</option>
-                                <option value="0.5">0.5%</option>
-<option value="1.0">1.0%</option>
-<option value="1.5">1.5%</option>
-<option value="2.0">2.0%</option>
-<option value="2.5">2.5%</option>
-<option value="3.0">3.0%</option>
-<option value="3.5">3.5%</option>
-<option value="4.0">4.0%</option>
-<option value="4.5">4.5%</option>
-<option value="5.0">5.0%</option>
-<option value="5.5">5.5%</option>
-<option value="6.0">6.0%</option>
-<option value="6.5">6.5%</option>
-<option value="7.0">7.0%</option>
-<option value="7.5">7.5%</option>
-<option value="8.0">8.0%</option>
-<option value="8.5">8.5%</option>
-<option value="9.0">9.0%</option>
-<option value="9.5">9.5%</option>
-<option value="10.0">10.0%</option>
-                            </InputSelect>
-                            <label for="select-role">Select Comms value</label>
-                        </div>
-                            </div>
-                        </div>
-
-                                                <div class="row">
-                            <label class="col-form-label fw-bold">Set Credit:</label>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <InputNumber type="number" @bind-Value="MemberSetting.Credit" class="form-control" />
-                                    <label>Credit Amount:</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <label class="col-form-label fw-bold">Auto Credit:</label>
-                            <div class="col-md-6">
-                                <div class="form-check mb-3">
-                                    <label class="form-check-label" for="chkAutoCredit">Click to Enable</label>
-                                    <InputCheckbox id="chkAutoCredit" class="form-check-input" type="checkbox" @bind-Value="MemberSetting.isAutoCredit" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <label class="col-form-label fw-bold">Phone Number:</label>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <InputText @bind-Value="MemberSetting.PhoneNumber" class="form-control" />
-                                    <label for="phone-number" class="form-label">PhoneNumber</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary btn-lg mt-2" type="submit">Submit Changes</button>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <InputText @bind-Value="MemberSetting.PhoneNumber" class="form-control" aria-required="true" />
+                            <label for="phone-number" class="form-label">Phone Number</label>
+                            <ValidationMessage For="() => MemberSetting.PhoneNumber" class="text-danger" />
                         </div>
                     </div>
-                }
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="form-floating mb-3">
+                            <InputNumber type="number" @bind-Value="MemberSetting.Credit" class="form-control" />
+                            <label>Credit Amount:</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <InputSelect type="number" @bind-Value="MemberSetting.TicketComms" class="form-select">
+                                <option value="0">0.0%</option>
+                                <option value="0.5">0.5%</option>
+                                <option value="1">1.0%</option>
+                                <option value="1.5">1.5%</option>
+                                <option value="2">2.0%</option>
+                                <option value="2.5">2.5%</option>
+                                <option value="3">3.0%</option>
+                                <option value="3.5">3.5%</option>
+                                <option value="4">4.0%</option>
+                                <option value="4.5">4.5%</option>
+                                <option value="5">5.0%</option>
+                                <option value="5.5">5.5%</option>
+                                <option value="6">6.0%</option>
+                                <option value="6.5">6.5%</option>
+                                <option value="7">7.0%</option>
+                                <option value="7.5">7.5%</option>
+                                <option value="8">8.0%</option>
+                                <option value="8.5">8.5%</option>
+                                <option value="9">9.0%</option>
+                                <option value="9.5">9.5%</option>
+                                <option value="10">10.0%</option>
+                            </InputSelect>
+                            <label for="select-Comms">Ticket Commisions</label>
+                            <ValidationMessage For="() => MemberSetting.TicketComms" class="text-danger" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-1 mb-4">
+                    <div class="col-md-12">
+                        <hr />
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit Changes</button>
+                    </div>
+                </div>
+
             </div>
-        </EditForm>
+
+        }
     </div>
-</div>
+</EditForm>
 
 @code {
-    private InputModel MemberSetting = new InputModel();
-    private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
+    [Parameter]public InputModel MemberSetting { get; set; } = new InputModel();
+    [Parameter]public string ModifyUser { get; set; }
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthStateTask { get; set; }
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
     private string? currentUserId = "";
+    private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
+
+    [Parameter] public EventCallback RefreshComponent { get; set; }
+
+
     private string? username;
     private string? phoneNumber;
     private string? currencyType;
     private double userTicketComms;
     private double userCredit;
 
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthStateTask { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         currentUserId = AuthStateTask.Result.User.Identity.Name;
         names = await memberData.GetListOfChildId(currentUserId);
+
+        if (!string.IsNullOrEmpty(ModifyUser))
+        {
+            MemberSetting.LoginId = ModifyUser;
+            MemberSetting.TicketComms = await memberData.GetTicketCommsOfUser(ModifyUser);
+            MemberSetting.isAutoCredit = await memberData.GetIsAutoCreditOfUser(ModifyUser);
+            MemberSetting.Credit = await memberData.GetCreditOfUser(ModifyUser);
+        }
     }
 
     private async Task HandleSelectedUser(ChangeEventArgs e)
     {
         string selecteduser = e.Value.ToString();
         var user = await UserManager.FindByNameAsync(selecteduser);
-        phoneNumber = await UserManager.GetPhoneNumberAsync(user);
-        currencyType = user.CurrencyType;
-
-        MemberSetting.PhoneNumber ??= phoneNumber;
-        MemberSetting.CurrencyType ??= currencyType;
-
-        userTicketComms = await memberData.GetTicketCommsOfUser(selecteduser);
-        userCredit = await memberData.GetCreditOfUser(selecteduser);
-        string currentUrl = NavigationManager.Uri;
-        NavigationManager.NavigateTo(currentUrl);
+        MemberSetting.PhoneNumber = await UserManager.GetPhoneNumberAsync(user);
+        MemberSetting.CurrencyType = user.CurrencyType;
+        MemberSetting.TicketComms = await memberData.GetTicketCommsOfUser(selecteduser);
+        MemberSetting.isAutoCredit = await memberData.GetIsAutoCreditOfUser(selecteduser);
+        MemberSetting.Credit = await memberData.GetCreditOfUser(selecteduser);
     }
 
     private async Task HandleModifyProfile()
     {
         var user = await UserManager.FindByNameAsync(MemberSetting.LoginId);
 
-        if(MemberSetting.Password != null && MemberSetting.Password != "" && MemberSetting.Password == MemberSetting.ConfirmPassword)
+        if (MemberSetting.Password != null && MemberSetting.Password != "" && MemberSetting.Password == MemberSetting.ConfirmPassword)
         {
             var token = await UserManager.GeneratePasswordResetTokenAsync(user);
             var result = await UserManager.ResetPasswordAsync(user, token, MemberSetting.Password);
         }
 
-        if(MemberSetting.CurrencyType != currencyType)
-        {
             user.CurrencyType = MemberSetting.CurrencyType;
-            var UpdateResult = await UserManager.UpdateAsync(user);
-        }
-
-        if(MemberSetting.TicketComms != userTicketComms)
-        {
             await memberData.UpdatedMemberTicketComms(MemberSetting.LoginId, MemberSetting.TicketComms);
-        }
-
-        if(MemberSetting.Credit != userCredit)
-        {
-            await memberData.UpdatedMemberCredit(MemberSetting.LoginId, MemberSetting.Credit);   
-        }
-
-        if(MemberSetting.PhoneNumber != phoneNumber)
-        {
+            await memberData.UpdatedMemberCredit(MemberSetting.LoginId, MemberSetting.Credit);
             user.PhoneNumber = MemberSetting.PhoneNumber;
             var UpdateResult = await UserManager.UpdateAsync(user);
-        }
+
+        await RefreshComponent.InvokeAsync();
     }
 
-    private sealed class InputModel
+    public class InputModel
     {
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Login ID")]
         public string LoginId { get; set; } = "";
 
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Password must contain at least one uppercase letter, one digit, one special character, and be at least 8 characters long.")]
         public string Password { get; set; } = "";
 
         [DataType(DataType.Password)]
@@ -238,22 +240,22 @@
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
 
-
-        [Display(Name = "Ticket Comms")]
-        public double TicketComms { get; set; }
-
+        [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Currency Type")]
         public string CurrencyType { get; set; } = "";
 
-        public bool isAutoCredit { get; set; } = false;
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; } = "";
 
         [Required]
-        [Phone]
-        [Display(Name = "Phone number")]
-        public string? PhoneNumber { get; set; }
+        [Display(Name = "Ticket Commision")]
+        public double TicketComms { get; set; } = 0.0;
 
-        [Display(Name = "Credit")]
-        public double Credit { get; set; }
+        public bool isAutoCredit { get; set; } = false;
+
+        public double Credit { get; set; } = 0.0;
     }
 }

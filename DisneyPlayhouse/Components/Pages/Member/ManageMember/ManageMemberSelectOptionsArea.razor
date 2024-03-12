@@ -22,21 +22,21 @@
 </div>
 
 
-@code{
+@code {
     [Parameter] public EventCallback OnSubmitAddNewMember { get; set; }
     [Parameter] public EventCallback OnSubmitViewMembers { get; set; }
     [Parameter] public EventCallback OnSubmitModifyMember { get; set; }
-    
+
     private async Task HandleNewMemberPageSubmit()
     {
         await OnSubmitAddNewMember.InvokeAsync();
     }
-    
+
     private async Task HandleViewMembersPageSubmit()
     {
         await OnSubmitViewMembers.InvokeAsync();
     }
-    
+
     private async Task HandleModifyMemberPageSubmit()
     {
         await OnSubmitModifyMember.InvokeAsync();

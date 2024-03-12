@@ -1,4 +1,7 @@
 ﻿@page "/ManageMember"
+@page "/ManageMember/ModifyMember/{MemberId}/{Option}"
+@page "/ManageMember/AddNewMember/{MemberId}/{Option}"
+
 @inject IStringLocalizer<Resource> localizer
 @inject NavigationManager NavigationManager
 
@@ -7,11 +10,11 @@
 @attribute [Authorize(Roles = "Player,Master,Agent,Senior")]
 
 <AuthorizeView>
-    <div class="row">
-        <div class="col-md-2">
-            <MemberNamesDisplayArea></MemberNamesDisplayArea>
-        </div>
-        <div class="col-md-10">
+    <MudGrid>
+        <MudItem xs="3">
+            <UserTree></UserTree>
+        </MudItem>
+        <MudItem xs="9">
             <ManageMemberSelectOptionsArea OnSubmitAddNewMember="HandleAddNewMember" OnSubmitModifyMember="HandleModifyMember" OnSubmitViewMembers="HandleViewAllMember"></ManageMemberSelectOptionsArea>
             @if (options == 1)
             {
@@ -23,19 +26,36 @@
             }
             @if (options == 3)
             {
-                <ModifyMember></ModifyMember>
+                <ModifyMember RefreshComponent="HandleRefreshComponent" ModifyUser="@newUserFor"></ModifyMember>
             }
-        </div>
-    </div>
+        </MudItem>
+    </MudGrid>
 </AuthorizeView>
 
 
 @code{
     private int options = 0;
     private string newUserFor = "";
+    [Parameter]
+    public string MemberId { get; set; }
+    [Parameter]
+    public string Option { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(MemberId))
+        {
+            newUserFor = MemberId;
+        }
+        if (!string.IsNullOrEmpty(Option))
+        {
+            options = Convert.ToInt32(Option);
+        }
+    }
 
     private async Task HandleAddNewMember()
     {
+        newUserFor = "";
         options = 1;
     }
 
@@ -46,11 +66,13 @@
 
     private async Task HandleModifyMember()
     {
+        newUserFor = "";
         options = 3;
     }
 
     private async Task HandleRefreshComponent()
     {
+        newUserFor = "";
         NavigationManager.NavigateTo("/ManageMember", true);
     }
     

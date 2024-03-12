@@ -130,5 +130,12 @@ namespace DisneyPlayhouseLibrary.Data
 
             return commsData.FirstOrDefault();
         }
+
+        public async Task<bool> GetIsAutoCreditOfUser(string userId)
+        {
+            var commsData = await _dataAccess.LoadData<bool, dynamic>("dbo.spMemberAutoCredit_Search", new { LoginId = userId }, "DefaultConnection");
+
+            return commsData.FirstOrDefault();
+        }
     }
 }
