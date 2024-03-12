@@ -22,7 +22,7 @@
             }
             @if (options == 2)
             {
-                <ViewAllMembers AddMemberHandlerForUser="SwitchToAddMemberView"></ViewAllMembers>
+                <ViewAllMembers></ViewAllMembers>
             }
             @if (options == 3)
             {
@@ -74,11 +74,5 @@
     {
         newUserFor = "";
         NavigationManager.NavigateTo("/ManageMember", true);
-    }
-    
-    private async Task SwitchToAddMemberView(string memberId)
-    {
-        newUserFor = memberId;
-        options = 1;
     }
 }

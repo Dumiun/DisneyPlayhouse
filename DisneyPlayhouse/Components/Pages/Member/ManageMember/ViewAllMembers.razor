@@ -24,11 +24,22 @@
     </thead>
     
     <tbody style="font-size:medium;" class="table-light">
-        @foreach(var member in memberChilds){
+                    @foreach (var member in memberViewAll)
+                    {
                         <tr>
-                            <td colspan="8" style="text-align:initial; background-color:seagreen; color:white; font-weight:bolder;">Member Tree of user : <span class="btn btn-light btn-sm fw-bold">@member.MemberId</span></td>
+                            <td>
+                            </td>
+                            <td class="text-dark"><b>@member.MemberId</b></td>
+                            <td>@member.Role</td>
+                            <td>@member.HandPhoneNo</td>
+                            <td>@member.CommsPercentage</td>
+                            <td>@member.CreditAmount</td>
+                            <td>@member.CurrencyType</td>
+                            <td>
+                                <button class="btn btn-success btn-sm m-1">Add Member</button>
+                                <button class="btn btn-warning btn-sm m-1">Modify Member</button>
+                            </td>
                         </tr>
-                    <ViewAllMembersView memberChilds="member" AddMemberHandler="HandleAddMember"></ViewAllMembersView>
         }
                 </tbody>
             </table>
@@ -38,39 +49,29 @@
 </div>
 
 @code {
+    private List<Lib_ManageMemberViewModel> memberViewAll = new List<Lib_ManageMemberViewModel>();
     private List<ILib_ListOfChildIdModel> names = new List<ILib_ListOfChildIdModel>();
     private string? currentUserId = "";
     [CascadingParameter] public Task<AuthenticationState> AuthStateTask { get; set; }
-    private List<ILib_ManageMemberViewChildModel> memberChilds = new List<ILib_ManageMemberViewChildModel>();
-    [Parameter] public EventCallback<string> AddMemberHandlerForUser { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
         currentUserId = AuthStateTask.Result.User.Identity.Name;
-        names = await memberData.GetListOfDirectChildId(currentUserId);
+        names = await memberData.GetListOfChildId(currentUserId);
 
-
-        foreach(var name in names)
+        foreach (var name in names)
         {
-            Lib_ManageMemberViewChildModel childData = new Lib_ManageMemberViewChildModel();
-            childData.MemberParentId = currentUserId;
-            childData.MemberId = name.ChildId;
+            Lib_ManageMemberViewModel viewData = new Lib_ManageMemberViewModel();
+            viewData.MemberId = name.ChildId;
             var user = await UserManager.FindByNameAsync(name.ChildId);
             var userRole = await UserManager.GetRolesAsync(user);
-            childData.Role = userRole[0];
-            childData.HandPhoneNo = user.PhoneNumber;
-            childData.CommsPercentage = 10;
-            childData.CreditAmount = 30000;
-            childData.CurrencyType = user.CurrencyType;
-            memberChilds.Add(childData);
+            viewData.Role = userRole[0];
+            viewData.HandPhoneNo = user.PhoneNumber;
+            viewData.CommsPercentage = 10;
+            viewData.CreditAmount = 30000;
+            viewData.CurrencyType = user.CurrencyType;
+            memberViewAll.Add(viewData);
         }
     }
-    
-    private async Task HandleAddMember(string userId)
-    {
-        await AddMemberHandlerForUser.InvokeAsync(userId);
-    }
-
 
 }

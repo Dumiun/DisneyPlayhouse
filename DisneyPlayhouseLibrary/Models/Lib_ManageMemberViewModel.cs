@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DisneyPlayhouseLibrary.Models
 {
-    public class Lib_ManageMemberViewChildModel : ILib_ManageMemberViewChildModel
+    public class Lib_ManageMemberViewModel : ILib_ManageMemberViewModel
     {
-        public string MemberParentId { get; set; }
         public string MemberId { get; set; }
         public string Role { get; set; }
         public string? HandPhoneNo { get; set; }
