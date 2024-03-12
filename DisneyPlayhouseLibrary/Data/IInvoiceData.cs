@@ -6,7 +6,7 @@ namespace DisneyPlayhouseLibrary.Data
     {
         Task CreateInvoiceLevel1Entry(ILib_InvoiceLevel1DataModel data);
 
-        Task CreateInvoiceLevel1_5Entry(Lib_InvoiceLevel1point5DataModel data);
+        Task CreateInvoiceLevel1_5Entry(Lib_InvoiceLevel1_5DataModel data);
 
         Task CreateInvoiceLevel2Entry(ILib_InvoiceLevel2DataModel data);
 

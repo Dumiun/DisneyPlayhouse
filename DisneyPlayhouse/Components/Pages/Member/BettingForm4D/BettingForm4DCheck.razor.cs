@@ -117,7 +117,7 @@ namespace DisneyPlayhouse.Components.Pages.Member.BettingForm4D
 
                 foreach (var drawDates in uniqueDrawDates)
                 {
-                    Lib_InvoiceLevel1point5DataModel level15entry = new Lib_InvoiceLevel1point5DataModel();
+                    Lib_InvoiceLevel1_5DataModel level15entry = new Lib_InvoiceLevel1_5DataModel();
 
                     level15entry.DrawDate = drawDates;
                     level15entry.InvoiceId = InvoiceId;

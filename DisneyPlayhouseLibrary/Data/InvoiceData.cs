@@ -37,7 +37,7 @@ namespace DisneyPlayhouseLibrary.Data
             await _dataAccess.SaveData("dbo.spInvoiceLevel1Entry_Insert", entry, "DefaultConnection");
         }
 
-        public async Task CreateInvoiceLevel1_5Entry(Lib_InvoiceLevel1point5DataModel data)
+        public async Task CreateInvoiceLevel1_5Entry(Lib_InvoiceLevel1_5DataModel data)
         {
             var entry = new
             {
@@ -54,7 +54,7 @@ namespace DisneyPlayhouseLibrary.Data
                 data.PurchasedDate,
                 data.LastUpdatedOn
             };
-            await _dataAccess.SaveData("dbo.spInvoiceLevel1point5Entry_Insert", entry, "DefaultConnection");
+            await _dataAccess.SaveData("dbo.spInvoiceLevel1_5Entry_Insert", entry, "DefaultConnection");
         }
 
         public async Task CreateInvoiceLevel2Entry(ILib_InvoiceLevel2DataModel data)

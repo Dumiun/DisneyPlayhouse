@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spInvoiceLevel1point5Entry_Insert]
+﻿CREATE PROCEDURE [dbo].[spInvoiceLevel1_5Entry_Insert]
     @InvoiceId NVARCHAR(MAX), 
     @PageName NVARCHAR(50), 
     @DrawDate DATETIME2,
@@ -15,6 +15,6 @@ AS
 BEGIN
 SET NOCOUNT ON;
 
-INSERT into [dbo].[4DInvoiceLevel1point5] (InvoiceId, PageName, DrawDate, TotalBig, TotalSmall, CommsPercentage, TotalAmount, StrikeAmount, PurchasedById, PurchasedForId, PurchasedDate, LastUpdatedOn)
+INSERT into [dbo].[4DInvoiceLevel1_5] (InvoiceId, PageName, DrawDate, TotalBig, TotalSmall, CommsPercentage, TotalAmount, StrikeAmount, PurchasedById, PurchasedForId, PurchasedDate, LastUpdatedOn)
 VALUES (@InvoiceId, @PageName, @DrawDate, @TotalBig, @TotalSmall, @CommsPercentage, @TotalAmount, @StrikeAmount, @PurchasedById, @PurchasedForId, @PurchasedDate, @LastUpdatedOn)
 END

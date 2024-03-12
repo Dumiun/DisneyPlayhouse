@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DisneyPlayhouseLibrary.Models;
 
-namespace DisneyPlayhouseLibrary.Models
+namespace DisneyPlayhouse.Models
 {
-    public class Lib_InvoiceLevel1point5DataModel : ILib_InvoiceLevel1point5DataModel
+    public class InvoiceLevel1_5DataModel : ILib_InvoiceLevel1_5DataModel
     {
         public string InvoiceId { get; set; }
         public string PageName { get; set; }

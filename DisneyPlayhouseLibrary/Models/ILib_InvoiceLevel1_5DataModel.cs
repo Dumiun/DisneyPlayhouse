@@ -1,6 +1,6 @@
 ﻿namespace DisneyPlayhouseLibrary.Models
 {
-    public interface ILib_InvoiceLevel1point5DataModel
+    public interface ILib_InvoiceLevel1_5DataModel
     {
         DateTime DrawDate { get; set; }
         string InvoiceId { get; set; }

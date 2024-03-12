@@ -83,8 +83,8 @@
     <Build Include="dbo\Stored Procedures\spGetNumberVariationForSelectedNumberInInvoice.sql" />
     <Build Include="dbo\Stored Procedures\spGetCurrentUserLevel1Invoices.sql" />
     <Build Include="dbo\Stored Procedures\spGetDateRangeForCurrentUserPageReport.sql" />
-    <Build Include="dbo\Tables\4DInvoiceLevel1point5.sql" />
-    <Build Include="dbo\Stored Procedures\spInvoiceLevel1point5Entry_Insert.sql" />
+    <Build Include="dbo\Tables\4DInvoiceLevel1_5.sql" />
+    <Build Include="dbo\Stored Procedures\spInvoiceLevel1_5Entry_Insert.sql" />
     <Build Include="dbo\Stored Procedures\spGetPageRecordsForUserOnDrawDate.sql" />
     <Build Include="dbo\Tables\CommissionSettings.sql" />
     <Build Include="dbo\Stored Procedures\spDirectChildId_Search.sql" />

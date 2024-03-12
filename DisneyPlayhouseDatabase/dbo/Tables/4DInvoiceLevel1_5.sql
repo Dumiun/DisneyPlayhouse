@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[4DInvoiceLevel1point5]
+﻿CREATE TABLE [dbo].[4DInvoiceLevel1_5]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [InvoiceId] NVARCHAR(MAX) NOT NULL, 

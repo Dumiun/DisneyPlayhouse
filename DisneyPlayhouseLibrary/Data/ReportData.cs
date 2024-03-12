@@ -50,9 +50,9 @@ namespace DisneyPlayhouseLibrary.Data
             return dateRange;
         }
 
-        public async Task<List<Lib_InvoiceLevel1point5DataModel>> GetPageRecordsForUserOnDrawDate(string reportForId, DateTime drawDate)
+        public async Task<List<Lib_InvoiceLevel1_5DataModel>> GetPageRecordsForUserOnDrawDate(string reportForId, DateTime drawDate)
         {
-            var invoices = await _dataAccess.LoadData<Lib_InvoiceLevel1point5DataModel, dynamic>("dbo.spGetPageRecordsForUserOnDrawDate", new { PurchasedForId = reportForId, DrawDate = drawDate }, "DefaultConnection");
+            var invoices = await _dataAccess.LoadData<Lib_InvoiceLevel1_5DataModel, dynamic>("dbo.spGetPageRecordsForUserOnDrawDate", new { PurchasedForId = reportForId, DrawDate = drawDate }, "DefaultConnection");
 
             return invoices;
         }

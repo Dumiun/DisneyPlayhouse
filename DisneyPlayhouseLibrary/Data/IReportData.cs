@@ -8,6 +8,6 @@ namespace DisneyPlayhouseLibrary.Data
 
         Task<List<List<Lib_InvoiceLevel1DataModel>>> GetNumberVariationsOfSelectedNumberInInvoice(string reportForId, DateTime fromDate, DateTime toDate);
 
-        Task<List<Lib_InvoiceLevel1point5DataModel>> GetPageRecordsForUserOnDrawDate(string reportForId, DateTime drawDate);
+        Task<List<Lib_InvoiceLevel1_5DataModel>> GetPageRecordsForUserOnDrawDate(string reportForId, DateTime drawDate);
     }
 }
